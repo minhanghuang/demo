@@ -7,13 +7,15 @@
 * Written by Huang Minhang <huangminhang@trunk.tech>, 2021/11/11 17:14
 */
 #include <iostream>
+#include <unistd.h>
 #include <grpcpp/grpcpp.h>
 #include "../proto/demo.grpc.pb.h"
 
 class HelloServiceImpl : public demo::HelloService::Service {
 public:
     grpc::Status SayHello(::grpc::ServerContext* context, const ::demo::Request* request, ::demo::Reply* response) override {
-        std::cout << "done_target" << std::endl;
+        std::cout << "say_hello" << std::endl;
+        sleep(1);
         return grpc::Status::OK;
     }
 };

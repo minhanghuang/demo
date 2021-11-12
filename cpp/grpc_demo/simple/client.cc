@@ -9,6 +9,7 @@
 #include "../proto/demo.grpc.pb.h"
 #include <grpcpp/grpcpp.h>
 #include <iostream>
+#include <chrono>
 #include <unistd.h>
 #include <memory>
 
@@ -22,8 +23,15 @@ public:
         demo::Request request;
         demo::Reply reply;
         grpc::ClientContext context;
-
+        grpc::ClientContext context2;
+        auto deadline = std::chrono::system_clock::now() + std::chrono::milliseconds(100);
+        context.set_deadline(deadline);
+        context2.set_deadline(deadline);
+        std::cout << "hello" << std::endl;
         grpc::Status status = m_service->SayHello(&context, request, &reply);
+        std::cout << "hello reply:" << status.error_code() << std::endl;
+        status = m_service->SayHello(&context2, request, &reply);
+        std::cout << "hello reply:" << status.error_code() << std::endl;
 
         if (status.ok()) {
             return 1;
