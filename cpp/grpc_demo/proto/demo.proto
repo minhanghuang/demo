@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package demo;
+
+message Request {
+  string name = 1;
+}
+
+message Reply {
+  string message = 1;
+}
+
+service HelloService {
+  rpc SayHello(Request) returns(Reply) {}
+}
+
+// protoc -I=. --cpp_out=. demo.proto
+// protoc --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_cpp_plugin` demo.proto

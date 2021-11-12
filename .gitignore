@@ -17,4 +17,4 @@ build_thirdparty.sh
 __pycache__
 log/*
 !log/.gitkeep
-
+.clang-format
