@@ -38,19 +38,20 @@ public:
 class HttpServer {
 public:
     HttpServer() {
+        mg_init_library(0);
+        std::vector<std::string> options = {
+                "document_root",".",
+                "listening_ports","10022"
+        };
+        m_server = std::make_unique<CivetServer>(options);
     }
     ~HttpServer() {
+        m_server->close();
     }
 
     void run() {
-        mg_init_library(0);
-        std::vector<std::string> options = {
-            "document_root",".",
-            "listening_ports","10022"
-        };
-        CivetServer m_server(options);
         OkView ok_view;
-        m_server.addHandler("/api/ok/", ok_view);
+        m_server->addHandler("/api/ok/", ok_view);
         while (true) {
             sleep(1);
         }
@@ -58,7 +59,7 @@ public:
     }
 
 private:
-//    std::unique_ptr<CivetServer> m_server;
+    std::unique_ptr<CivetServer> m_server;
 };
 
 #endif//CIVETWEB_DEMO_SERVER_H

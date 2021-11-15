@@ -12,6 +12,7 @@ pkg_check_modules(NLOHMANNJSON REQUIRED nlohmann_json)
 include_directories(
     ${Boost_INCLUDE_DIRS}
     ${NLOHMANNJSON_INCLUDE_DIRS}
+    ${civetweb_INCLUDE_DIR}
 )
 
 link_directories (
