@@ -10,7 +10,7 @@
 .DS_Store
 
 build/
-cmake-build-debug/
+cmake-build*
 thirdparty/
 build_thirdparty.sh
 
