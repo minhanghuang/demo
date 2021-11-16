@@ -16,7 +16,10 @@ HttpServer::HttpServer(int port) : m_port(port) {
     mg_init_library(0);
     m_options = {
         "document_root",".",
-        "listening_ports", std::to_string(m_port)
+        "listening_ports", std::to_string(m_port),
+        "access_control_allow_headers","*",
+        "access_control_allow_methods","*",
+        "access_control_allow_origin","*",
     };
     m_server = std::make_shared<CivetServer>(m_options);
     m_websocket = std::make_shared<SimpleWebsocket>("simple");

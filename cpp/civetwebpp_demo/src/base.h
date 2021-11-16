@@ -9,7 +9,9 @@
 #ifndef CIVETWEBPP_DEMO_BASE_H
 #define CIVETWEBPP_DEMO_BASE_H
 #include <iostream>
+#include <sstream>
 #include <mutex>
+#include <thread>
 #include <memory>
 #include <nlohmann/json.hpp>
 #include <utility>
@@ -27,10 +29,10 @@ public:
 
 class WebSocketBase : public CivetWebSocketHandler {
 public:
+    thread_local static std::stringstream m_data;
+    thread_local static unsigned char m_current_opcode;
     using Json = nlohmann::json;
     using Connection = struct mg_connection;
-    using MessageHandler = std::function<void(const Json &, Connection *)>;
-    using ConnectionReadyHandler = std::function<void(Connection *)>;
 
     explicit WebSocketBase(std::string name);
 
@@ -76,9 +78,6 @@ public:
     bool handleData(CivetServer *server, Connection *conn, int bits, char *data,
                     size_t data_len) override;
 
-    bool handleJsonData(Connection *conn, const std::string &data);
-    bool handleBinaryData(Connection *conn, const std::string &data);
-
     /**
      * @brief Callback method for when the connection is closed.
      *
@@ -107,26 +106,8 @@ public:
     bool SendBinaryData(Connection *conn, const std::string &data,
                         bool skippable = false);
 
-    /**
-     * @brief Add a new message handler for a message type.
-     * @param type The name/key to identify the message type.
-     * @param handler The function to handle the received message.
-     */
-    void RegisterMessageHandler(const std::string& type, MessageHandler handler);
-
-    /**
-     * @brief Add a new handler for new connections.
-     * @param handler The function to handle the new connection in ReadyState.
-     */
-    void RegisterConnectionReadyHandler(const ConnectionReadyHandler& handler);
-
 private:
     const std::string m_name;
-
-    // Message handlers keyed by message type.
-    std::unordered_map<std::string, MessageHandler> m_message_handlers;
-    // New connection ready handlers.
-    std::vector<ConnectionReadyHandler> m_connection_ready_handlers;
 
     // The mutex guarding the connection set. We are not using read
     // write lock, as the server is not expected to get many clients
@@ -137,11 +118,12 @@ private:
 
     // The pool of all maintained connections. Each connection has a lock to
     // guard against simultaneous write.
-    std::unordered_map<Connection *, std::shared_ptr<std::mutex>> m_connections;
+    std::unordered_map<Connection*, std::shared_ptr<std::mutex>> m_user_pool;
+
 };
 
 }// namespace http
-}    // namespace infra
+}// namespace infra
 }// namespace trunk
 
 #endif//CIVETWEBPP_DEMO_BASE_H
