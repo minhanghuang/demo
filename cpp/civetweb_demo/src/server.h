@@ -27,10 +27,10 @@ public:
         mg_write(conn, c, s.size());
         return true;
     }
-    bool handlePost(CivetServer *server, struct mg_connection *conn) {
+    bool handlePost(CivetServer *server, struct mg_connection *conn) override {
         return true;
     }
-    bool handlePut(CivetServer *server, struct mg_connection *conn) {
+    bool handlePut(CivetServer *server, struct mg_connection *conn) override {
         return true;
     }
 };

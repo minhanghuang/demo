@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package demo;
+
+message Request {
+  string name = 1;
+}
+
+message Reply {
+  string message = 1;
+}
+
+// protoc  --python_out=. *.proto
