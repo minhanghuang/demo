@@ -13,8 +13,11 @@ build/
 cmake-build*
 thirdparty/
 build_thirdparty.sh
+*.db
 
 __pycache__
 log/*
 !log/.gitkeep
 .clang-format
+
+trunk
