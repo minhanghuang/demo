@@ -8,14 +8,13 @@
 */
 #include <iostream>
 #include <vector>
-#include <boost/asio.hpp>
-#include <boost/array.hpp>
+#include <unistd.h>
+#include <asio.hpp>
 
 
 #define maxlength 1024
 
-using boost::asio::ip::udp;
-using namespace boost::asio;
+using asio::ip::udp;
 
 struct Header {
     int id;
@@ -38,38 +37,27 @@ struct Frame {
 
 int main() {
     std::cout << "Hello, UDP Client!" << std::endl;
-    try {
 
-        boost::asio::io_context io_context;
+    Frame frame{};
+    frame.header.id = 100;
+    frame.header.version = "1.2.3";
+    frame.header.stamp = 1.3;
+    frame.header.user = 200;
+    frame.data.value = 123;
+    frame.data.lis[0] = 1.1;
+    frame.data.lis[1] = 1.2;
+    char* p = (char*)&frame;
 
-        // 服务器IP
-        udp::endpoint receiver_endpoint(boost::asio::ip::address::from_string("127.0.0.1"), 8787);
+    asio::io_context io_context;
+    udp::endpoint sender_endpoint(asio::ip::address::from_string("127.0.0.1"), 9005);
+    udp::socket socket(io_context);
+    socket.open(udp::v4());
 
-        // 打开socket
-        udp::socket socket(io_context);
-        socket.open(udp::v4());
-
-        // 同步发送数据
-        boost::array<char, 1> send_buf  = {{ 1 }};
-        socket.send_to(boost::asio::buffer(send_buf), receiver_endpoint);
-
-        // 同步接收数据
-        char recv_buf[maxlength];
-        udp::endpoint sender_endpoint;
-        size_t len = socket.receive_from(boost::asio::buffer(recv_buf,maxlength), sender_endpoint);
-        auto* pp= (Frame *)recv_buf;
-        std::cout << "id:" << pp->header.id <<std::endl;
-        std::cout << "version:" << pp->header.version <<std::endl;
-        std::cout << "stamp:" << pp->header.stamp <<std::endl;
-        std::cout << "user:" << (int)pp->header.user <<std::endl;
-        std::cout << "value:" << (int)pp->data.value <<std::endl;
-        std::cout << "lis0:" << pp->data.lis[0] <<std::endl;
-        std::cout << "lis1:" << pp->data.lis[1] <<std::endl;
+    while (true) {
+        socket.send_to(asio::buffer(p, sizeof(frame)), sender_endpoint);
+        std::cout << "send" << std::endl;
+        sleep(1);
     }
-    catch (std::exception& e) {
-        std::cerr << e.what() << std::endl;
-    }
-
 
     return 0;
 }
