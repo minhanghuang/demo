@@ -1,5 +1,5 @@
 <launch>
-  <node pkg="hadmap_server_adapter" name="hadmap_server_adapter_node" type="hadmap_server_adapter_node">
-    <param name="yaml_path" type="string" value="$(find hadmap_server_adapter)/conf/hadmap_server_adapter.yaml" />
+  <node pkg="catkin_demo" name="catkin_demo_node" type="catkin_demo_node">
+    <param name="yaml_path" type="string" value="$(find catkin_demo)/conf/catkin_demo.yaml" />
   </node>
 </launch>
