@@ -36,4 +36,3 @@ class SQL3(object):
 if __name__ == '__main__':
     print("Hello SQLAlchemy!")
     sql = SQL3()
-    sql.insert()
