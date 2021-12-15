@@ -8,15 +8,15 @@ class CPU(object):
         self.process_list = []
 
     def update_process(self):
-        self.process_list.clear()
+        self.process_list = []
         for pid in psutil.pids():
-            p = psutil.Process(pid)
-            if p.pid > 1000 and p.status() == "running":
-                try:
-                    p.cpu_percent(None)
-                    self.process_list.append(p)
-                except Exception as e:
-                    pass
+            try:
+                p = psutil.Process(pid)
+                p.cpu_percent(None)
+                self.process_list.append(p)
+            except Exception as e:
+                pass
+        print("self.process_list:",len(self.process_list))
         time.sleep(1)
         return None
 
