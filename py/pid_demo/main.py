@@ -25,10 +25,13 @@ class CPU(object):
         q = queue.PriorityQueue(10) # top 10 process
 
         for process in self.process_list:
-            curr_percent = process.cpu_percent(None)
-            if q.full():
-                q.get()
-            q.put([curr_percent, process.pid])
+            try:
+                curr_percent = process.cpu_percent(None)
+                if q.full():
+                    q.get()
+                q.put([curr_percent, process.pid])
+            except Exception as e:
+                pass
 
         print(q.qsize())
         while not q.empty():  # 不为空时候执行
