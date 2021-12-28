@@ -10,7 +10,7 @@
 #include <asio.hpp>
 
 
-#define maxlength 1024
+#define maxlength 1400
 
 using asio::ip::udp;
 
@@ -28,8 +28,9 @@ struct Data {
 };
 
 struct Frame {
-    Header header;
-    Data   data;
+//    Header header;
+//    Data   data;
+    int q;
 };
 
 int main(int argc , char ** argv) {
@@ -45,13 +46,13 @@ int main(int argc , char ** argv) {
             size_t length = sock.receive_from(asio::buffer(recv_buf, maxlength), sender_endpoint);
             auto* pp= (Frame *)recv_buf;
             std::cout << "length:" << length <<std::endl;
-            std::cout << "id:" << pp->header.id <<std::endl;
+            std::cout << "na:" << pp->q <<std::endl;
 //            std::cout << "version:" << pp->header.version <<std::endl;
-            std::cout << "stamp:" << pp->header.stamp <<std::endl;
-            std::cout << "user:" << (int)pp->header.user <<std::endl;
-            std::cout << "value:" << (int)pp->data.value <<std::endl;
-            std::cout << "lis0:" << pp->data.lis[0] <<std::endl;
-            std::cout << "lis1:" << pp->data.lis[1] <<std::endl;
+//            std::cout << "stamp:" << pp->header.stamp <<std::endl;
+//            std::cout << "user:" << (int)pp->header.user <<std::endl;
+//            std::cout << "value:" << (int)pp->data.value <<std::endl;
+//            std::cout << "lis0:" << pp->data.lis[0] <<std::endl;
+//            std::cout << "lis1:" << pp->data.lis[1] <<std::endl;
             std::cout << "---" <<std::endl;
         }
     }

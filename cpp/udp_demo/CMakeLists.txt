@@ -19,10 +19,18 @@ link_directories (
 
 add_executable(server server.cc)
 add_executable(client client.cc)
+add_executable(b_server broadcast_server.cc)
+add_executable(b_client broadcast_client.cc)
 
 target_link_libraries(server
     ${Boost_LIBRARIES}
 )
 target_link_libraries(client
+    ${Boost_LIBRARIES}
+)
+target_link_libraries(b_server
+    ${Boost_LIBRARIES}
+)
+target_link_libraries(b_client
     ${Boost_LIBRARIES}
 )

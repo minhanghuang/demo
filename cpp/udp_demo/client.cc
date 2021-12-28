@@ -30,8 +30,9 @@ struct Data {
 };
 
 struct Frame {
-    Header header;
-    Data   data;
+//    Header header;
+//    Data   data;
+    int q;
 };
 
 
@@ -39,23 +40,24 @@ int main() {
     std::cout << "Hello, UDP Client!" << std::endl;
 
     Frame frame{};
-    frame.header.id = 100;
-    frame.header.version = "1.2.3";
-    frame.header.stamp = 1.3;
-    frame.header.user = 200;
-    frame.data.value = 123;
-    frame.data.lis[0] = 1.1;
-    frame.data.lis[1] = 1.2;
+//    frame.header.id = 100;
+//    frame.header.version = "1.2.3";
+//    frame.header.stamp = 1.3;
+//    frame.header.user = 200;
+//    frame.header.na = 0;
+//    frame.data.value = 123;
+//    frame.data.lis[0] = 1.1;
+//    frame.data.lis[1] = 1.2;
     char* p = (char*)&frame;
 
     asio::io_context io_context;
-    udp::endpoint sender_endpoint(asio::ip::address::from_string("127.0.0.1"), 9005);
+    udp::endpoint sender_endpoint(asio::ip::address::from_string("192.168.0.192"), 9005);
     udp::socket socket(io_context);
     socket.open(udp::v4());
 
     while (true) {
         socket.send_to(asio::buffer(p, sizeof(frame)), sender_endpoint);
-        std::cout << "send" << std::endl;
+        std::cout << "send: " << frame.q++ << std::endl;
         sleep(1);
     }
 
