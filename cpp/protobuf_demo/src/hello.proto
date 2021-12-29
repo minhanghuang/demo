@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package hello;
+
+message Reply {
+  int32 result = 1;
+}
+
+message HelloMessage {
+  int32 a = 1;
+  int32 b = 2;
+}
+
+// protoc -I=. --cpp_out=. *.proto
