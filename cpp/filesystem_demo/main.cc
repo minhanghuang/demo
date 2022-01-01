@@ -82,9 +82,7 @@ int main() {
     // 5. 文件流
     // // 头文件<fstream>定义的文件流不能将boost::filesystem::path定义的目录作为参数。如果非要使用path对象打开文件流的话，那就添加头文件<boost/filesystem/fstream.hpp>
     boost::filesystem::path p{"haha.txt"};
-
     boost::filesystem::ofstream ofs{p};
-
     ofs << "Hello, world!\n";
 
     return 0;
