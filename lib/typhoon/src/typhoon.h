@@ -9,4 +9,8 @@
 #ifndef TYPHOON_TYPHOON_H_
 #define TYPHOON_TYPHOON_H_
 
+#include "core/httpserver.h"
+#include "core/web.h"
+#include "core/websocket.h"
+
 #endif //TYPHOON_TYPHOON_H_
