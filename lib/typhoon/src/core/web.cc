@@ -14,7 +14,23 @@ namespace web {
 
 RequestHandler::RequestHandler() = default;
 
-void RequestHandler::Response(struct mg_connection *conn,
+nlohmann::json RequestHandler::RequestData(Connection *conn) {
+  return nlohmann::json::parse(CivetServer::getPostData(conn));
+}
+
+const RequestHandler::Info*
+RequestHandler::RequestInfo(Connection *conn) {
+  return mg_get_request_info(conn);
+}
+
+std::string RequestHandler::RequestParam(Connection *conn,
+                                         const std::string& key) {
+  std::string velue;
+  CivetServer::getParam(conn,key.c_str(),velue);
+  return velue;
+}
+
+void RequestHandler::Response(Connection *conn,
                               const nlohmann::json& data,
                               int32_t status_code) {
   std::string s = data.dump(0);
