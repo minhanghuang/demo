@@ -158,7 +158,7 @@ bool WebSocketHandler::SendData(Connection *conn,
     if (ret == 0) {
       std::cout << "Connection closed";
     } else if (ret < 0) {
-      std::cout << "Send error: " << std::strerror(errno);
+      std::cout << "Send error: " << errno << std::endl;
     } else {
       std::cout << "Bytes to send: expected "
                 << data.size()
