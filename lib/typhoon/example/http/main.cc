@@ -32,6 +32,7 @@ int main() {
   std::cout << "Hello, Typhoon web!" << std::endl;
   OkView view;
   server::Application app;
+  app.port = "9999";
   server::HTTPServer server(app);
   server.AddHandler("/ok", view);
   server.Start();

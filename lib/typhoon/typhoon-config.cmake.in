@@ -1,16 +1,16 @@
 # - Config file for the trunk ins package
 # It defines the following variables
-#  TRUNK_MAP_INCLUDE_DIRS - include directory
-#  TRUNK_MAP_LIBRARY_DIRS - library directory
-#  TRUNK_MAP_LIBRARIES   - libraries to link against
+#  TYPHOON_INCLUDE_DIRS - include directory
+#  TYPHOON_LIBRARY_DIRS - library directory
+#  TYPHOON_LIBRARIES   - libraries to link against
 
 # Compute paths
-get_filename_component(TRUNK_MAP_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
-set(TRUNK_MAP_INCLUDE_DIRS "@CONFIG_INCLUDE_DIRS@")
-set(TRUNK_MAP_LIBRARY_DIRS "@CONFIG_LIBRARY_DIRS@")
+get_filename_component(TYPHOON_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+set(TYPHOON_INCLUDE_DIRS "@CONFIG_INCLUDE_DIRS@")
+set(TYPHOON_LIBRARY_DIRS "@CONFIG_LIBRARY_DIRS@")
 
 # Our library dependencies (contains definitions for IMPORTED targets)
-include("${TRUNK_MAP_CMAKE_DIR}/trunk_map-targets.cmake")
+include("${TYPHOON_CMAKE_DIR}/TYPHOON-targets.cmake")
 
 # These are IMPORTED targets created by yaml-cpp-targets.cmake
-set(TRUNK_MAP_LIBRARIES "@EXPORT_TARGETS@")
+set(TYPHOON_LIBRARIES "@EXPORT_TARGETS@")
