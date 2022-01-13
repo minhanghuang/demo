@@ -60,7 +60,11 @@ int main() {
     boost::filesystem::create_directories(path4); // 创建目录
 
 //    boost::filesystem::remove(path3); // 删除目录
-//    boost::filesystem::remove_all(path3); // 递归删除目录
+    std::cout << "-----删除 " << std::endl;
+    std::string abs_remove_all_path = "/Users/cox/work/code/githubccc/demo/cpp/filesystem_democcccc";
+    boost::filesystem::path remove_all_path(abs_remove_all_path);
+    boost::filesystem::remove_all(remove_all_path); // 递归删除目录
+    std::cout << "-----删除 " << std::endl;
 
 //    boost::filesystem::rename(path3,path5); // 重命名目录(目录存在时)
 

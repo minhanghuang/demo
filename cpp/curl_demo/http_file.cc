@@ -11,11 +11,11 @@
 
 
 size_t writedata2file(void *ptr, size_t size, size_t nmemb, FILE *stream) {
-  size_t written = fwrite(ptr, size, nmemb, stream);
-  return written;
+//  size_t written = fwrite(ptr, size, nmemb, stream);
+  return fwrite(ptr, size, nmemb, stream);
 }
 
-int download_file(const char* url, const char outfilename[FILENAME_MAX]){
+int download_file(const std::string& from_path, const std::string& to_path){
   CURL *curl;
   FILE *fp;
   CURLcode res;
@@ -30,10 +30,10 @@ int download_file(const char* url, const char outfilename[FILENAME_MAX]){
   /*  调用curl_easy_init()函数得到 easy interface型指针  */
   curl = curl_easy_init();
   if (curl) {
-    fp = fopen(outfilename,"wb");
+    fp = fopen(to_path.c_str(),"wb");
 
     /*  调用curl_easy_setopt()设置传输选项 */
-    res = curl_easy_setopt(curl, CURLOPT_URL, url);
+    res = curl_easy_setopt(curl, CURLOPT_URL, from_path.c_str());
     if (res != CURLE_OK)
     {
       fclose(fp);
@@ -41,7 +41,7 @@ int download_file(const char* url, const char outfilename[FILENAME_MAX]){
       return -1;
     }
     /*  根据curl_easy_setopt()设置的传输选项，实现回调函数以完成用户特定任务  */
-    res = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writedata2file);
+    res = curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, fwrite);
     if (res != CURLE_OK){
       fclose(fp);
       curl_easy_cleanup(curl);
@@ -77,10 +77,9 @@ int download_file(const char* url, const char outfilename[FILENAME_MAX]){
 
 int main() {
   std::cout << "Hello, Http File!" << std::endl;
-  std::string strURL = "http://192.168.199.4:8080/file/bags/hdmap.bag";
-  char local_file[50] = {0};
-  sprintf(local_file,"./pb_%d_%s.dat",1,"aaaa");
-  int iDownlaod_Success = download_file(strURL.c_str(),local_file);
+  std::string src_path = "http://192.168.11.35:2223/data/testbag1/mini/test_data.tar.gz";
+  std::string dest_path = "haha.tar.gz";
+  int iDownlaod_Success = download_file(src_path,dest_path);
   if(iDownlaod_Success<0){
     std::cout << "失败" << std::endl;
   }
