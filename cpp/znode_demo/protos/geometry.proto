@@ -1,0 +1,89 @@
+syntax = "proto3";
+package trunk.msgs;
+
+import "google/protobuf/timestamp.proto";
+
+message Header {
+  uint32 seq = 1;
+  google.protobuf.Timestamp timestamp = 2;
+  string frame_id = 3;
+}
+
+// A general 2D point. Its meaning and units depend on context, and must be
+// explained in comments.
+message Point2D {
+  double x = 1;
+  double y = 2;
+}
+
+// A general 3D point. Its meaning and units depend on context, and must be
+// explained in comments.
+message Point3D {
+  double x = 1;
+  double y = 2;
+  double z = 3;
+}
+
+// A general 4D point. Its meaning and units depend on context, and must be
+// explained in comments.
+message Point4D {
+  double x = 1;
+  double y = 2;
+  double z = 3;
+  double theta = 4;
+}
+
+// A unit quaternion that represents a spatial rotation. See the link below for
+// details.
+//   https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation
+// The scalar part qw can be omitted. In this case, qw should be calculated by
+//   qw = sqrt(1 - qx * qx - qy * qy - qz * qz).
+message Quaternion {
+  double qx = 1;
+  double qy = 2;
+  double qz = 3;
+  double qw = 4;
+}
+
+// A general vector3. Its meaning and units depend on context, and must be
+// explained in comments.
+message Vector3 {
+  double x = 1;
+  double y = 2;
+  double z = 3;
+}
+
+// A representation of pose in free space, composed of position and orientation.
+message Pose {
+  Point3D position = 1;
+  Quaternion orientation = 2;
+}
+
+// A Pose with reference coordinate frame and timestamp.
+message PoseStamped {
+  google.protobuf.Timestamp timestamp = 1;
+  Pose pose = 2;
+}
+
+// This expresses velocity in free space broken into its linear and angular parts.
+message Twist {
+  Vector3 linear = 1;
+  Vector3 angular = 2;
+}
+
+message RPY {
+  double roll = 1;
+  double pitch = 2;
+  double heading = 3;
+}
+
+message Transform {
+  string frame_id = 1;
+  string  child_id = 2;
+
+  Vector3 translation = 3;
+  Quaternion rotation = 4;
+
+  Vector3 delta_pos = 5;
+  RPY rpy = 6;
+}

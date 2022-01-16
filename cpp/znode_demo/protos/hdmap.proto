@@ -1,0 +1,76 @@
+syntax = "proto3";
+package trunk.msgs;
+
+import "geometry.proto";
+import "google/protobuf/empty.proto";
+
+message MapReply {
+  enum Status {
+    EXECUTING = 0;  // 执行中
+    DONE = 1;       // 已完毕
+    ERROR = 2;      // 错误
+  }
+  enum Error {
+    NA = 0;            // 没有错误
+    UNACHIEVABLE = 1;  // 终点不可达
+    INVALIDSRC = 2;    // 起点不在地图内
+    INVALIDDEST = 3;   // 终点不在地图内
+  }
+  Status status = 1;
+  Error error = 2;
+}
+
+message Position {
+  Point3D point = 1;
+  sint32 forward = 2;
+  sint32 backward = 3;
+}
+
+message CenterPoint {
+  Point4D point = 1;
+  double kappa = 2;
+  double speed_limit = 3;
+  double len_integral = 4;
+}
+
+message BorderPoint {
+  Point2D point = 1;
+}
+
+message Destination {
+  sint32 task_id = 1;
+  Point3D start_point = 2;
+  Point3D end_point = 3;
+}
+
+message Lane {
+  repeated CenterPoint center_line_point = 1;
+  repeated Point2D left_boundary_point = 2;
+  repeated Point2D right_boundary_point = 3;
+  int32 id = 4;
+  int32 type = 5;
+  int32 turn_type = 6;
+}
+
+message LocalMap {
+  repeated Lane lane = 1;
+  repeated Point2D left_boundary_point = 2;
+  repeated Point2D right_boundary_point = 3;
+  double remaining_distance = 4;
+  int32 target_lane_id = 5;
+}
+
+message Region {
+  int32 type = 1;
+  int32 turn_type = 2;
+}
+
+message TargetLanes {
+  sint32 task_id = 1;
+  repeated Lane lane = 2;
+  repeated string target_lane_id = 3;
+}
+
+
+// protoc -I=. --cpp_out=. *.proto
+
