@@ -21,3 +21,9 @@ install(DIRECTORY conf DESTINATION
 )
 
 file(COPY conf/ DESTINATION ${CMAKE_BINARY_DIR}/devel/share/${PROJECT_NAME}/conf)
+
+# 对文件追加内容
+
+file(APPEND haha.txt "message to write\n")
+file(APPEND haha.txt "message to write")
+file(APPEND haha.txt "message to write34")
