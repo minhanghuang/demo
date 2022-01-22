@@ -12,9 +12,6 @@ pkg_check_modules(Rosbag rosbag)
 pkg_check_modules(TmapsMsg tmaps_msg)
 
 include_directories(
-#    /opt/ros/melodic/include
-    /opt/ros/kinetic/include
-    /opt/tmaps/include
     ${Boost_INCLUDE_DIRS}
     ${Roscpp_INCLUDE_DIRS}
     ${Rosbag_INCLUDE_DIRS}
@@ -29,11 +26,19 @@ link_directories (
     ${PCL_LIBRARY_DIRS}
 )
 
-add_executable(${TARGET_NAME}_runner main.cpp)
+add_library(${TARGET_NAME} SHARED
+    src/transform.cc
+)
 
-target_link_libraries(${TARGET_NAME}_runner
+target_link_libraries(${TARGET_NAME}
     ${Boost_LIBRARIES}
     ${Roscpp_LIBRARIES}
     ${Rosbag_LIBRARIES}
     ${PclRos_LIBRARIES}
+)
+
+add_executable(${TARGET_NAME}_runner main.cpp)
+
+target_link_libraries(${TARGET_NAME}_runner
+    ${TARGET_NAME}
 )

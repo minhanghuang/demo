@@ -11,7 +11,6 @@ pkg_check_modules(Trunk_msgs trunk_msgs)
 pkg_check_modules(Cater_node cater_node)
 
 include_directories(
-    /opt/trunk30/include
     ${Boost_INCLUDE_DIRS}
     ${Protobuf_INCLUDE_DIRS}
     ${Trunk_msgs_INCLUDE_DIRS}
