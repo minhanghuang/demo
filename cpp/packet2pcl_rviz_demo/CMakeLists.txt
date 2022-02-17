@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD 14)
 find_package(PkgConfig REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system thread filesystem)
 find_package(PCL REQUIRED)
+find_package(Eigen3 REQUIRED)
 pkg_check_modules(YamlCpp REQUIRED yaml-cpp)
 pkg_check_modules(Roscpp roscpp)
 pkg_check_modules(SensorMsgs sensor_msgs)
@@ -15,6 +16,7 @@ include_directories(
     ${Boost_INCLUDE_DIRS}
     ${Roscpp_INCLUDE_DIRS}
     ${PCL_INCLUDE_DIRS}
+    ${EIGEN3_INCLUDE_DIR}
     ${SensorMsgs_INCLUDE_DIRS}
     ${YamlCpp_INCLUDE_DIRS}
     /opt/tmaps/include
@@ -24,6 +26,7 @@ link_directories (
     ${Boost_LIBRARY_DIRS}
     ${Roscpp_LIBRARY_DIRS}
     ${PCL_LIBRARY_DIRS}
+    ${EIGEN3_LIBRARY_DIRS}
     ${YamlCpp_LIBRARY_DIRS}
 )
 
@@ -35,6 +38,7 @@ target_link_libraries(${TARGET_NAME}
     ${Boost_LIBRARIES}
     ${Roscpp_LIBRARIES}
     ${PCL_LIBRARIES}
+    ${EIGEN3_LIBRARIES}
     ${YamlCpp_LIBRARIES}
 )
 
