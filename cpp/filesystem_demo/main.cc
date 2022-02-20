@@ -19,6 +19,7 @@ int main() {
     std::string abs_path3 = "/Users/cox/work/code/github/demo/cpp/filesystem_demo/haha";
     std::string abs_path4 = "/Users/cox/work/code/github/demo/cpp/filesystem_demo/haha/ooo/uuuu/yyyy";
     std::string abs_path5 = "/Users/cox/work/code/github/demo/cpp/filesystem_demo/hihi";
+    std::string abs_path6 = "/Users/cox/work/code/github/demo/cpp/filesystem_demo/hihi/";
 
     // 1. path
     boost::filesystem::path path1(abs_path1);
@@ -26,11 +27,14 @@ int main() {
     boost::filesystem::path path3(abs_path3);
     boost::filesystem::path path4(abs_path4);
     boost::filesystem::path path5(abs_path5);
+    boost::filesystem::path path6(abs_path6);
     std::cout << "输出字符串形式的路径: " << path1.string() << std::endl; // /Users/cox/work/code/github/demo/cpp/filesystem_demo
     std::cout << "文件名，不带扩展名: " << path1.stem() << std::endl; // "filesystem_demo"
     std::cout << "返回文件扩展名: " << path1.extension() << std::endl; // ""
     std::cout << "获取文件或目录的绝对路径: " << boost::filesystem::absolute(path1) << std::endl; // /Users/cox/work/code/github/demo/cpp/filesystem_demo
     std::cout << "当前路径: " << boost::filesystem::current_path() << std::endl; // 如果没有参数传入，则返回当前工作目录；否则，则将传入的目录设为当前工作目录
+    std::cout << "拼接路径1: " << path5/"jjjj" << std::endl;
+    std::cout << "拼接路径2: " << path6/"jjjj" << std::endl;
 
 
     // 2. 判断文件
