@@ -42,6 +42,8 @@ public:
         FLAGS_log_dir = abs_path; // 将日志文件输出到本地
         google::InitGoogleLogging("glog_demo"); // glog_demo.bogon.cox.log.ERROR.20211226-151429.53038
         google::SetStderrLogging(console_level);  //大于指定级别的日志都输出到标准输出
+        google::InstallFailureSignalHandler(); // backtrace
+//        google::InstallFailureWriter(&FatalMessageDump);
 //        FLAGS_logtostderr = false; // 日志只显示在终端
         FLAGS_alsologtostderr = false; // 让日志同时输出到终端
     }

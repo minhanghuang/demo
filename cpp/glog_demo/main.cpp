@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
+#include <csignal>
 #include "utils/log.h"
+#include "utils/test.h"
 
 
 int main(int argc, char **argv) {
@@ -12,6 +14,9 @@ int main(int argc, char **argv) {
     Log::init(google::GLOG_INFO);
     LOG(ERROR) << "There is error !!!";
     LOG(INFO) << "There is info !!! " << v;
+//    raise(SIGINT);
+    MyTest t;
+    t.Run();
     MLOG_INFO("-------------");
     return 0;
 }

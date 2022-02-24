@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.5)
 project(spdlog_demo)
 
 set(TARGET_NAME ${PROJECT_NAME})
