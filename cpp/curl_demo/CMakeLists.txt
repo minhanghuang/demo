@@ -21,12 +21,17 @@ link_directories (
 
 add_executable(${TARGET_NAME}_runner main.cc)
 add_executable(http_file_runner http_file.cc)
+add_executable(http_post_runner http_post.cc)
 
 target_link_libraries(${TARGET_NAME}_runner
     ${Boost_LIBRARIES}
     ${Curl_LIBRARIES}
 )
 target_link_libraries(http_file_runner
+    ${Boost_LIBRARIES}
+    ${Curl_LIBRARIES}
+)
+target_link_libraries(http_post_runner
     ${Boost_LIBRARIES}
     ${Curl_LIBRARIES}
 )

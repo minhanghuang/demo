@@ -1,6 +1,8 @@
-from log import log
+from http_log import http_log
+import time
+
 
 if __name__ == '__main__':
     print("logger")
-    log.info("info")
-    log.error("error")
+    http_log.info("http logxxxxxx")
+    time.sleep(1)
