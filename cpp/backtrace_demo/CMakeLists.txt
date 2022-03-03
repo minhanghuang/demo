@@ -6,14 +6,5 @@ set(TARGET_NAME ${PROJECT_NAME})
 
 add_definitions("-Wall -g")
 
-add_library(${TARGET_NAME} SHARED
-    src/stacktrace.cc
-)
+add_executable(${TARGET_NAME}_runner main.cc)
 
-add_executable(${TARGET_NAME}_runner main.cpp)
-
-target_link_libraries(${TARGET_NAME}_runner
-    ${TARGET_NAME}
-    bfd
-    iberty
-)
