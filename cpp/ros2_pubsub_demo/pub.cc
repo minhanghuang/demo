@@ -18,7 +18,7 @@ int main(int argc, char **argv) {
         chatter_pub->publish(msg);
         rclcpp::spin_some(node);
         r.sleep();
-    }`
+    }
     rclcpp::shutdown();
     return 0;
 }
