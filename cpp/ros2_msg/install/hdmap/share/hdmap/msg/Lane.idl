@@ -1,0 +1,12 @@
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from hdmap/msg/Lane.msg
+// generated code does not contain a copyright notice
+
+
+module hdmap {
+  module msg {
+    struct Lane {
+      string lane_id;
+    };
+  };
+};

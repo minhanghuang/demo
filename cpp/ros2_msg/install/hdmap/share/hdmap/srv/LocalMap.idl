@@ -1,0 +1,17 @@
+// generated from rosidl_adapter/resource/srv.idl.em
+// with input from hdmap/srv/LocalMap.srv
+// generated code does not contain a copyright notice
+
+
+module hdmap {
+  module srv {
+    struct LocalMap_Request {
+      string id;
+
+      int64 len;
+    };
+    struct LocalMap_Response {
+      int64 status;
+    };
+  };
+};
