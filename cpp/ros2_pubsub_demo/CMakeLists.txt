@@ -6,6 +6,7 @@ set(TARGET_NAME ${PROJECT_NAME})
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
 
 include_directories(
     ${std_msgs_INCLUDE_DIRS}
