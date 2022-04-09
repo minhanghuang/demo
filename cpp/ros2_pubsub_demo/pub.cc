@@ -7,7 +7,7 @@ int main(int argc, char **argv) {
     std::cout << "Hello, ROS2 Sub!" << std::endl;
     rclcpp::init(argc, argv);
     auto node = rclcpp::Node::make_shared("pub_node");
-    auto chatter_pub = node->create_publisher<std_msgs::msg::String>("/pub", 1);
+    auto chatter_pub = node->create_publisher<std_msgs::msg::String>("/topic", 1);
     rclcpp::WallRate r(5);
     
     std_msgs::msg::String msg;

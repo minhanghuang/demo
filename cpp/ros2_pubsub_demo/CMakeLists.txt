@@ -15,6 +15,19 @@ include_directories(
 
 add_executable(pub pub.cc)
 add_executable(sub sub.cc)
+add_executable(pub_class pub_class.cc)
+add_executable(sub_class sub_class.cc)
 
 ament_target_dependencies(pub rclcpp std_msgs)
 ament_target_dependencies(sub rclcpp std_msgs)
+ament_target_dependencies(pub_class rclcpp std_msgs)
+ament_target_dependencies(sub_class rclcpp std_msgs)
+
+install(TARGETS
+    pub
+    sub
+    pub_class
+    sub_class
+    DESTINATION lib/${PROJECT_NAME}
+)
+
