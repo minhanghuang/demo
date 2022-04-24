@@ -1,3 +1,4 @@
+#include "ros/duration.h"
 #include <iostream>
 #include <ros/ros.h>
 #include <roscpp_tutorials/TwoInts.h>
@@ -13,6 +14,8 @@ int main(int argc, char *argv[]) {
   roscpp_tutorials::TwoInts srv;
   srv.request.a = 1;
   srv.request.b = 3;
+  // 判断server是否启动 
+  client.waitForExistence(ros::Duration(3));
   if (client.call(srv)) {
     std::cout << "call " << srv.response.sum << std::endl;
   }
