@@ -1,39 +1,32 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
+#include <typhoon/typhoon.h>
 
-#include "typhoon/typhoon.h"
 
-using namespace trunk::typhoon;
+class MyApi1: public typhoon::RequestHandler {
+public: 
+  void Get(typhoon::Application* app, typhoon::Connection* conn) override {
+    std::cout << "simple get" << std::endl; 
+    Response(app, conn, "simple http get");
+  }
+  
+  void Post(typhoon::Application* app, typhoon::Connection* conn) override {
+    std::cout << "simple post" << std::endl; 
+    auto data = GetRequestData(conn);
+    std::cout << "data: " << data << std::endl;
+    Response(app, conn, "simple http post");
+  }
 
-class OkView : public web::RequestHandler {
-public:
-    bool handleGet(CivetServer *server, web::Connection *conn) override {
-        nlohmann::json json_data;
-        json_data["msg"] = "ok";
-        Response(conn, json_data, 200);
-        return true;
-    }
-
-    bool handlePost(CivetServer *server, web::Connection *conn) override {
-        nlohmann::json response;
-        response["msg"] = "post";
-        auto req_info = RequestInfo(conn);
-
-        std::cout << "RequestData:" << RequestData(conn) << std::endl;
-        std::cout << "RequestParam:" << RequestParam(conn,"p") << std::endl;
-        std::cout << "request_uri:" << req_info->request_uri << std::endl;
-        std::cout << "content_length:" <<  req_info->content_length << std::endl;
-        Response(conn, response, 200);
-        return true;
-    }
 };
 
 int main() {
     std::cout << "Hello, Typhoon!" << std::endl;
-    OkView view;
-    server::Application app;
-    server::HTTPServer server(app);
-    server.AddHandler("/ok", view);
-    server.Start();
+    typhoon::Options options;
+    options.port = 9900;
+    std::cout << "typhoon simple http: " << options.port << std::endl;
+    typhoon::Server server(options);
+    auto api = std::make_shared<MyApi1>();
+    server.AddHandle("/api/simple/", api);
+    server.Spin();
     return 0;
 }
