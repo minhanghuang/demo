@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/trunk/work/code/github/demo/cpp/ros_launch/devel/setup.sh
