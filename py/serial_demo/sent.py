@@ -2,7 +2,7 @@ import serial
 
 
 if __name__ == "__main__":
-    ser = serial.Serial('/dev/pts/2', 115200, 8, 'N', 1) # 'COM7', 3000000, bytesize=8, parity='N', stopbits=1
+    ser = serial.Serial('/dev/pts/7', 115200, 8, 'N', 1) # 'COM7', 3000000, bytesize=8, parity='N', stopbits=1
     flag = ser.is_open
 
     if flag:
