@@ -1,19 +1,18 @@
+#include "src/module.hpp"
+#include "src/parser.hpp"
 #include <iostream>
 
-#include "src/parser.h"
-
-void callback(const DataFrame& df) {
-  std::cout << "callback: " << std::endl;
-}
+void callback(const DataFrame &data) { std::cout << "callback: " << std::endl; }
 
 int main(int argc, char *argv[]) {
   std::cout << "asio serial" << std::endl;
-  std::string devname = "/dev/pts/7";
-  unsigned int baud_rate = 115200;
+  if (argc != 2) {
+    std::cout << "需要传入串口号" << std::endl;
+    return -1;
+  }
+  std::string port = argv[1];
   asio::io_context io;
-
-  Parser parser(devname, baud_rate, io, callback);
+  Parser parser(io, callback, port, 115200);
   parser.Start();
-
   return 0;
 }
