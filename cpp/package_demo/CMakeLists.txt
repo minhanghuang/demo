@@ -92,14 +92,14 @@ include(CPack)
 #                       package 
 # --------------------------------------------------------------
 configure_file(
-  cmake/${PROJECT_NAME}.pc.in
-  ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.pc
+  "cmake/${PROJECT_NAME}.pc.in"
+  "${PROJECT_BINARY_DIR}/pkgconfig/${PROJECT_NAME}.pc"
   @ONLY
 )
 
 configure_package_config_file(
   "${CMAKE_CURRENT_SOURCE_DIR}/cmake/${TARGET_NAME}-config.cmake.in"
-  ${TARGET_NAME}-config.cmake
+  "cmake/${TARGET_NAME}-config.cmake"
   INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${TARGET_NAME}"
   NO_CHECK_REQUIRED_COMPONENTS_MACRO
   PATH_VARS CMAKE_INSTALL_INCLUDEDIR CMAKE_INSTALL_LIBDIR TARGET_NAME
