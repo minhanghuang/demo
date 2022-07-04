@@ -1,0 +1,18 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build with Clang", //这个任务的名字在launch.json最后一项配置
+            "type": "shell",
+            "command": "cd ${workspaceFolder}/build && cmake .. && make -j4",
+         	 	"args": [],
+            "options": {
+                "cwd": "/usr/bin"
+            },
+          	"group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<launch>
+  <node pkg="hdmap" type="pub" respawn="false" name="talker_para" output="screen">
+    <param name="avalue" value="1" type="int" />
+    <param name="bvalue" value="2" type="int" />
+  </node>
+</launch>
+

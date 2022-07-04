@@ -1,9 +1,12 @@
 #include <iostream>
+#include <memory>
+#include <vector>
 
 int main() {
     std::cout << "Hello, World!" << std::endl;
-    int id = 173402;
-    std::cout << id/100 << std::endl;
-    std::cout << id%100 << std::endl;
+    std::cout << "Hello, World!" << std::endl;
+    std::vector<int> a;
+    a.push_back(1);
+    a.push_back(1);
     return 0;
 }
