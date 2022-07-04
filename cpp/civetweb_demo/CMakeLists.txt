@@ -2,23 +2,27 @@ cmake_minimum_required(VERSION 3.17)
 project(civetweb_demo)
 
 set(TARGET_NAME ${PROJECT_NAME})
-
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 14)
+
 find_package(PkgConfig REQUIRED)
-find_package(civetweb REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system thread)
+pkg_check_modules(Civetweb REQUIRED civetweb)
+pkg_check_modules(CivetwebCpp REQUIRED civetweb-cpp)
 pkg_check_modules(NLOHMANNJSON REQUIRED nlohmann_json)
 
 include_directories(
     ${Boost_INCLUDE_DIRS}
     ${NLOHMANNJSON_INCLUDE_DIRS}
-    ${civetweb_INCLUDE_DIR}
+    ${Civetweb_INCLUDE_DIR}
+    ${CivetwebCpp_INCLUDE_DIR}
 )
 
 link_directories (
     ${Boost_LIBRARY_DIRS}
     ${NLOHMANNJSON_LIBRARY_DIRS}
-    /usr/local/lib
+    ${Civetweb_LIBRARY_DIRS}
+    ${CivetwebCpp_LIBRARY_DIRS}
 )
 
 aux_source_directory(src ENGINE_SOURCE_DIRS)
@@ -30,9 +34,9 @@ add_library(${TARGET_NAME} SHARED
 )
 
 target_link_libraries(${TARGET_NAME}
-    libcivetweb-cpp.so
-    libcivetweb.so
     ${Boost_LIBRARIES}
+    ${Civetweb_LIBRARIES}
+    ${CivetwebCpp_LIBRARIES}
     ${NLOHMANNJSON_LIBRARIES}
 )
 
