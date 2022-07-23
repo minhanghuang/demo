@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -8,9 +9,8 @@ public:
   ~Animal() = default;
   Animal(const std::string &n) { name = n; }
   void Eat() const { std::cout << "Animal Eat" << std::endl; }
-  void SetName(const std::string &n) {
-    // name = n;
-  }
+  void SetName(const std::string &n) { name = n; }
+  std::string GetName() { return name; }
   std::string name;
 };
 
@@ -107,11 +107,15 @@ int main(int argc, char *argv[]) {
   // for (int i = 0; i < 3; i++) {
   //   auto pi = std::make_shared<Animal>("a1");
   //   std::cout << "pi addr: " << pi << std::endl;
+  //   pi->SetName("a" + std::to_string(i));
   //   vp.emplace_back(pi);
   // }
   // std::cout << "---" << std::endl;
   // for (auto &pi : vp) {
-  //   std::cout << "p addr: " << pi << std::endl;
+  //   std::cout << "p addr: " << pi << " name: " << pi->name << " count: " << pi.use_count() << std::endl;
+  //   // pi.SetName(" "); // error
+  //   // pi.GetName(); // error, GetName() not const function 
+  //   pi->Eat(); // ok
   // }
 
   return 0;
