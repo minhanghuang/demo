@@ -16,7 +16,7 @@ public:
 
 std::shared_ptr<Animal> GetPtr() {
   std::shared_ptr<Animal> ptr = std::make_shared<Animal>("g");
-  std::cout << "ptr addr:" << ptr << std::endl;
+  std::cout << "ptr addr:" << &ptr << " value:" << ptr << std::endl;
   return ptr;
 }
 
@@ -26,6 +26,36 @@ std::shared_ptr<const Animal> GetConstPtr() {
   std::cout << "ptr addr:" << ptr << std::endl;
   return ptr;
 }
+
+class PtrPoll {
+public:
+  PtrPoll() {
+    for (int i = 0; i < 10; i++) {
+      std::string name = std::to_string(i);
+      auto a = std::make_shared<Animal>(name);
+      std::cout << "创建指针:" << name << " "
+                << "addr:" << &a << " value:" << a << std::endl;
+      animal_[name] = a;
+    }
+
+    dog_ = std::make_shared<Animal>("dog");
+    std::cout << "dog addr:" << &dog_ << " value:" << dog_ << std::endl;
+  }
+  std::shared_ptr<Animal> GetAnimal(const std::string &name) {
+    return animal_.at(name);
+  }
+
+  std::shared_ptr<Animal> GetDog() {
+  // std::shared_ptr<Animal>& GetDog() {
+  // const std::shared_ptr<Animal>& GetDog() {
+    std::cout << "get dog addr:" << &dog_ << " value:" << dog_ << std::endl;
+    return dog_;
+  }
+
+private:
+  std::shared_ptr<Animal> dog_;
+  std::unordered_map<std::string, std::shared_ptr<Animal>> animal_;
+};
 
 int main(int argc, char *argv[]) {
   std::cout << "ptr demo" << std::endl;
@@ -112,11 +142,62 @@ int main(int argc, char *argv[]) {
   // }
   // std::cout << "---" << std::endl;
   // for (auto &pi : vp) {
-  //   std::cout << "p addr: " << pi << " name: " << pi->name << " count: " << pi.use_count() << std::endl;
+  //   std::cout << "p addr: " << pi << " name: " << pi->name << " count: " <<
+  //   pi.use_count() << std::endl;
   //   // pi.SetName(" "); // error
-  //   // pi.GetName(); // error, GetName() not const function 
+  //   // pi.GetName(); // error, GetName() not const function
   //   pi->Eat(); // ok
   // }
+
+  // auto ptr = GetPtr();
+  // std::cout << ptr->GetName() << " ptr addr: " << &ptr << " value:" << ptr <<
+  // std::endl;
+
+  //
+  auto pts = PtrPoll();
+  // 创建指针:0 addr:0x7ff7bb9e82a8 value:0x600000184318
+  // 创建指针:1 addr:0x7ff7bb9e82a8 value:0x600000184348
+  // 创建指针:2 addr:0x7ff7bb9e82a8 value:0x600000184378
+  // 创建指针:3 addr:0x7ff7bb9e82a8 value:0x6000001843d8
+  // 创建指针:4 addr:0x7ff7bb9e82a8 value:0x600000184408
+  // 创建指针:5 addr:0x7ff7bb9e82a8 value:0x600000184438
+  // 创建指针:6 addr:0x7ff7bb9e82a8 value:0x6000001843a8
+  // 创建指针:7 addr:0x7ff7bb9e82a8 value:0x600000184468
+  // 创建指针:8 addr:0x7ff7bb9e82a8 value:0x600000184498
+  // 创建指针:9 addr:0x7ff7bb9e82a8 value:0x6000001844c8
+  auto a = pts.GetAnimal("1");
+  std::cout << "\n获取指针:1 "
+            << "addr:" << &a << " value:" << a
+            << std::endl; // 获取指针:1 addr:0x7ff7bb9e8468 value:0x600000184348
+  std::shared_ptr<Animal> b = std::make_shared<Animal>("11");
+  std::cout << "指针:11 "
+            << "addr:" << &b << " value:" << b
+            << std::endl; // 指针:11 addr:0x7ff7bb9e8440 value:0x6000001844f8
+  b.swap(a);
+  std::cout << "交换" << std::endl;
+  std::cout << "\n获取指针:1 "
+            << "addr:" << &a << " value:" << a
+            << std::endl; // 获取指针:1 addr:0x7ff7bb9e8468 value:0x6000001844f8
+  std::cout << "指针:11 "
+            << "addr:" << &b << " value:" << b
+            << std::endl; // 指针:11 addr:0x7ff7bb9e8440 value:0x600000184348
+  auto c = pts.GetAnimal("1");
+  std::cout
+      << "\n重新获取指针:1 "
+      << "addr:" << &c << " value:" << c
+      << std::endl; // 重新获取指针:1 addr:0x7ff7bb9e8430 value:0x600000184348
+   
+  auto dog = pts.GetDog();
+  std::cout << "\ndog指针: "
+            << "addr:" << &dog << " value:" << dog << std::endl;
+  pts.GetDog().swap(b);
+  // b.swap(dog);
+  std::cout << "交换" << std::endl;
+  auto dog2 = pts.GetDog();
+  std::cout << "\ndog2指针: "
+            << "addr:" << &dog2 << " value:" << dog2 << std::endl;
+  std::cout << "指针:11 "
+            << "addr:" << &b << " value:" << b << std::endl;
 
   return 0;
 }
