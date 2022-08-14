@@ -1,0 +1,9 @@
+octomap_demo_node: # 节点名 
+  ros__parameters: # 默认, 必须
+    name: "octomap"
+    points: [
+      0,0,0,
+      1,1,1,
+      2,2,2,
+      3,3,3,
+    ]

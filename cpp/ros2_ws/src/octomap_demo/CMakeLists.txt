@@ -8,24 +8,16 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
-find_package(sensor_msgs REQUIRED)
-find_package(PCL REQUIRED)
-
-include_directories(
-  ${PCL_INCLUDE_DIRS}
-)
-
-link_libraries(
-  ${PCL_LIBRARY_DIRS}
-)
+find_package(octomap_msgs REQUIRED)
+find_package(octomap REQUIRED)
 
 add_executable(${TARGET_NAME} main.cc)
 
 ament_target_dependencies(${TARGET_NAME} 
-  rclcpp
   std_msgs
-  sensor_msgs
-  PCL
+  octomap_msgs 
+  octomap 
+  rclcpp
 )
 
 install(TARGETS
@@ -36,6 +28,7 @@ install(TARGETS
 install(
   DIRECTORY
   launch
+  param 
   DESTINATION share/${PROJECT_NAME}
 )
 
