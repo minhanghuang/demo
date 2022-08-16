@@ -41,14 +41,22 @@ void PointsToOctoMap(const Points &pts, octomap::ColorOcTree *octomap) {
   unsigned int R = 216;
   unsigned int G = 120;
   unsigned int B = 255;
-
-  for (const auto& point : pts) {
-    octomap->updateNode(octomap::point3d(point.x, point.y, point.z), true);
-    octomap->setNodeColor(point.x, point.y, point.z, 0, 0, 0);
+  
+  for (int i = 0; i < 20; i++) {
+    for (int j = 0; j < 20; j++) {
+      for (int k = 0; k < 20; k++) {
+        octomap->updateNode(octomap::point3d(i, j, k), true);
+      } 
+    } 
   }
+
+  // for (const auto &point : pts) {
+    // octomap->updateNode(octomap::point3d(point.x, point.y, point.z), true);
+  // }
 }
 
-void OctoMapToMsg(octomap::ColorOcTree *octomap, octomap_msgs::msg::Octomap& msg) {
+void OctoMapToMsg(octomap::ColorOcTree *octomap,
+                  octomap_msgs::msg::Octomap &msg) {
   msg.header.frame_id = "map";
   msg.binary = false;
   octomap_msgs::fullMapToMsg(*octomap, msg);
@@ -59,11 +67,11 @@ int main(int argc, char **argv) {
   auto node = rclcpp::Node::make_shared("octomap_demo_node");
   auto pub =
       node->create_publisher<octomap_msgs::msg::Octomap>("/pub_octomap", 1);
-  rclcpp::WallRate r(5);
+  rclcpp::WallRate r(1);
 
   Points pts;
   ParamPoints(node, pts);
-  octomap::ColorOcTree* octomap = new octomap::ColorOcTree(0.1);
+  octomap::ColorOcTree *octomap = new octomap::ColorOcTree(0.5);
   octomap_msgs::msg::Octomap msg;
   PointsToOctoMap(pts, octomap);
   OctoMapToMsg(octomap, msg);
