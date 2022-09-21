@@ -3,6 +3,7 @@ project(nlohmann_demo)
 
 set(TARGET_NAME ${PROJECT_NAME})
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(Nlohmann_json REQUIRED nlohmann_json)
