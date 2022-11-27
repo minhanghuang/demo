@@ -23,4 +23,5 @@ log/*
 .clang-format
 
 trunk
+main
 .cache
