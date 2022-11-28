@@ -43,8 +43,9 @@ int main(int argc, char* argv[]) {
   for (const auto& n : ns) {
     std::cout << "n: " << n.s << std::endl;
   }
-  Node nx{18, 1, "nx"};
-  auto ns_ret = ns.upper_bound(nx);
+  Node nx{19, 1, "nx"};
+  // auto ns_ret = ns.upper_bound(nx); // 第一个大于19的元素
+  auto ns_ret = ns.lower_bound(nx); // 第一个大于等于19的元素
   if (ns_ret == ns.end()) {
     std::cout << "没找到." << std::endl;
   } else {
