@@ -28,6 +28,26 @@ int main(int argc, char* argv[]) {
     std::cout << "找到: " << a.at(a_ret - a.begin()) << std::endl;
   }
 
+  /// 结构体
+  std::vector<Poly3> pv;
+  Poly3 p1, p2, p3, p4;
+  p1.s = 11;
+  p2.s = 14;
+  p3.s = 15;
+  p4.s = 19;
+  pv.emplace_back(p1);
+  pv.emplace_back(p2);
+  pv.emplace_back(p3);
+  pv.emplace_back(p4);
+  auto pv_ret =
+      std::lower_bound(pv.begin(), pv.end(), 19,
+                       [](const Poly3& p, int value) { return p.s < value; });
+  if (pv_ret == pv.end()) {
+    std::cout << "没找到." << std::endl;
+  } else {
+    std::cout << "找到: " << pv.at(pv_ret - pv.begin()).s << std::endl;
+  }
+
   /// set
   std::set<int> s{11, 12, 13, 15, 16, 17, 18, 111};
   auto s_ret = s.upper_bound(14);
