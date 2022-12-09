@@ -4,23 +4,24 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
+#include <string>
 
 int main(int argc, char* argv[]) {
   std::cout << "Hello XML." << std::endl;
-  tinyxml2::XMLDocument doc;
+  tinyxml2::XMLDocument r_doc;
 
   // 加载文件
-  doc.LoadFile("test.xml");
-  if (doc.Error()) {
+  r_doc.LoadFile("test.xml");
+  if (r_doc.Error()) {
     return -1;
   }
 
   // 获取根元素
-  tinyxml2::XMLElement* root_ele = doc.RootElement();
+  tinyxml2::XMLElement* root_ele = r_doc.RootElement();
 
   // 获取元素
   tinyxml2::XMLElement* header_ele =
-      doc.FirstChildElement("OpenDRIVE")->FirstChildElement("header");
+      r_doc.FirstChildElement("OpenDRIVE")->FirstChildElement("header");
   if (header_ele) {
     std::cout << "has header element" << std::endl;
   } else {
@@ -55,6 +56,17 @@ int main(int argc, char* argv[]) {
        curr_ele; curr_ele = curr_ele->NextSiblingElement()) {
     std::cout << "element name:" << curr_ele->Name() << std::endl;
   }
+
+  // 写入
+  const std::string file_path = "xxx.xml";
+  tinyxml2::XMLDocument w_doc;
+  const char* declaration = "<?xml version=\"1.0\" standalone=\"yes\"?>";
+  r_doc.Parse(declaration);
+  tinyxml2::XMLElement* ele_root = r_doc.NewElement("OpenDRIVE");
+  r_doc.InsertEndChild(ele_root);
+  tinyxml2::XMLElement* ele_head = r_doc.NewElement("header");
+  ele_root->InsertEndChild(ele_head);
+  r_doc.SaveFile(file_path.c_str());
 
   return 0;
 }
