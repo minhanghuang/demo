@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
   /// std::ios::app 追加
   /// std::ios::trunc 如果文件存在,先删除,再创建
   /// std::ios::binary 二进制
-  fs.open("data.json", std::ios::out);
+  fs.open("/Users/cox/data.json", std::ios::out);
   fs << "{'header':'bbb'}" << std::endl;
   fs.close();  // 关闭句柄
   return 0;
