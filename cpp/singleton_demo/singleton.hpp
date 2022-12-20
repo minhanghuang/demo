@@ -1,21 +1,21 @@
 #include <mutex>
 
-class Sigaction {
-public:
-  Sigaction() = default;
-  ~Sigaction() = default;
-  Sigaction(const Sigaction &) = delete;
-  Sigaction &operator=(const Sigaction &) = delete;
-  static Sigaction *Instance(bool create_if_needed = true) {
-    static Sigaction *instance = nullptr;
-    if (!instance && create_if_needed) {
+class Singleton {
+ public:
+  Singleton(const Singleton&) = delete;
+  Singleton& operator=(const Singleton&) = delete;
+
+  template <typename T>
+  static T* Instance() {
+    static T* instance = nullptr;
+    if (!instance) {
       static std::once_flag flag;
-      std::call_once(flag, [&] { instance = new (std::nothrow) Sigaction(); });
+      std::call_once(flag, [&] { instance = new (std::nothrow) T(); });
     }
     return instance;
   }
 
-  static std::string GetName() { return "singleton"; }
-
-private:
+ private:
+  Singleton() = default;
+  ~Singleton() = default;
 };
