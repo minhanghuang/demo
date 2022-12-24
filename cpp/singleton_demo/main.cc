@@ -30,15 +30,15 @@ struct Dog : public Animal {
 };
 
 int main(int argc, char* argv[]) {
-  auto cat1 = Singleton::Instance<Cat>();  // Tue Dec 20 16:33:54 2022
+  auto cat1 = Singleton<Cat>::Instance();  // Tue Dec 20 16:33:54 2022
   // Cat* cat1 = new Cat(); // Tue Dec 20 16:33:41 2022
   sleep(2);
-  auto cat2 = Singleton::Instance<Cat>();  // Tue Dec 20 16:33:54 2022
+  auto cat2 = Singleton<Cat>::Instance();  // Tue Dec 20 16:33:54 2022
   // Cat* cat2 = new Cat(); Tue Dec 20 16:33:43 2022
 
-  auto dog1 = Singleton::Instance<Dog>();  // Tue Dec 20 16:33:56 2022
+  auto dog1 = Singleton<Dog>::Instance();  // Tue Dec 20 16:33:56 2022
   sleep(2);
-  auto dog2 = Singleton::Instance<Dog>();  // Tue Dec 20 16:33:56 2022
+  auto dog2 = Singleton<Dog>::Instance();  // Tue Dec 20 16:33:56 2022
 
   std::cout << "cat1 borth: " << cat1->borth() << std::endl;
   std::cout << "cat2 borth: " << cat2->borth() << std::endl;

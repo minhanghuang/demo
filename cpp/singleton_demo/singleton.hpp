@@ -1,11 +1,11 @@
 #include <mutex>
 
+template <typename T>
 class Singleton {
  public:
   Singleton(const Singleton&) = delete;
   Singleton& operator=(const Singleton&) = delete;
 
-  template <typename T>
   static T* Instance() {
     static T* instance = nullptr;
     if (!instance) {
