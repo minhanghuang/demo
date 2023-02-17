@@ -76,17 +76,61 @@ int main(int argc, char* argv[]) {
     assert(cat.use_count() == 1);
   }
 
-  // 独享指针(两个指针不能指向一个对象，不能进行复制操作只能进行移动操作)
+  /// 独享指针(两个指针不能指向一个对象，不能进行复制操作只能进行移动操作)
   // 移动(std::move()): 移动不会构造新的对象
+  // 我有一本书
+  //   拷贝: 手抄书的内容给你, 出现两本一模一样的书
+  //   移动: 我把书给你, 不会出现新的书, 但是我没有了书的管理权
   {
     std::unique_ptr<Cat> cat = std::make_unique<Cat>("Unique Tom");
     assert(cat->name() == "Unique Tom");
     assert(cat != nullptr);
-    // std::unique_ptr<Cat> cat2 = cat; // error
-    // auto cat2 = cat;  // error
+    // // std::unique_ptr<Cat> cat2 = cat; // error
+    // // auto cat2 = cat;  // error
     std::unique_ptr<Cat> cat2 = std::move(cat);
     assert(cat2 != nullptr);
     assert(cat == nullptr);
+  }
+  {
+    // std::shared_ptr -> std::unique_ptr  not ok
+    // std::unique_ptr -> std::shared_ptr  ok
+
+    // not ok
+    // std::shared_ptr<Cat> s_cat = std::make_shared<Cat>();
+    // std::unique_ptr<Cat> u_cat = std::move(s_cat);
+
+    // ok
+    std::unique_ptr<Cat> u_cat = std::make_unique<Cat>();
+    std::shared_ptr<Cat> s_cat = std::move(u_cat);
+  }
+
+  /// 弱智能指针
+  {
+    std::shared_ptr<Cat> cat = std::make_shared<Cat>("Tom");
+    assert(cat.use_count() == 1);
+    std::shared_ptr<Cat> cat2 = cat;
+    assert(cat.use_count() == 2);
+    std::weak_ptr<Cat> weak_cat = cat;  // 不增加引用计数
+    assert(cat.use_count() == 2);
+    // 使用: ptr->lock()
+    assert(weak_cat.lock() != nullptr);
+    assert(weak_cat.lock()->name() == "Tom");
+  }
+
+  /// 智能void类型指针
+  {
+    std::shared_ptr<void> void_cat = std::make_shared<Cat>("Tom");
+    assert(void_cat.use_count() == 1);
+    std::shared_ptr<Cat> cat = std::static_pointer_cast<Cat>(void_cat);
+    assert(cat->name() == "Tom");
+    assert(void_cat.use_count() == 2);
+    assert(cat.use_count() == 2);
+    void_cat.reset();
+    assert(void_cat.use_count() == 0);
+    assert(cat != nullptr);
+    if (cat) {
+      std::cout << "xxx" << cat.use_count() << std::endl;
+    }
   }
   return 0;
 }
