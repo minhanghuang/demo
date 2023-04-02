@@ -12,6 +12,8 @@
 build/
 cmake-build*
 thirdparty/
+node_modules/
+.temp/
 build_thirdparty.sh
 *.db
 install/
