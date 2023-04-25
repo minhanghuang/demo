@@ -163,6 +163,29 @@ int main(int argc, char* argv[]) {
     assert(cat_unique_ptr->name() == "copy_tom");
     std::cout << "#################### 7-0 #######" << std::endl;
   }
+  {
+    std::cout << "#################### 7-1 " << std::endl;
+    std::shared_ptr<Cat> cat = std::make_shared<Cat>();
+    cat->set_name("cat");
+    assert(cat->name() == "cat");
+
+    // 结论: cat和copy_cat指向两块内存
+    std::shared_ptr<Cat> copy_cat = std::make_shared<Cat>(*cat);
+    assert(cat->name() == "cat");
+    assert(copy_cat->name() == "cat");
+    copy_cat->set_name("copy_cat");
+    assert(cat->name() == "cat");
+    assert(copy_cat->name() == "copy_cat");
+
+    // 结论: cat和copy_cat2指向同一块内存
+    std::shared_ptr<Cat> copy_cat2 = cat;
+    assert(cat->name() == "cat");
+    assert(copy_cat2->name() == "cat");
+    copy_cat2->set_name("copy_cat2");
+    assert(cat->name() == "copy_cat2");
+    assert(copy_cat2->name() == "copy_cat2");
+    std::cout << "#################### 7-1 #######" << std::endl;
+  }
 
   /// convert
   {
