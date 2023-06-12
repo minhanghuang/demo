@@ -5,7 +5,8 @@ set(TARGET_NAME ${PROJECT_NAME})
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-find_package(Boost REQUIRED)
+# 必须指定组件, 否则找不到
+find_package(Boost REQUIRED COMPONENTS system thread)
 
 include_directories(
   ${Boost_INCLUDE_DIRS}
