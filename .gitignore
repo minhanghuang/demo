@@ -22,7 +22,6 @@ log/
 __pycache__
 log/*
 !log/.gitkeep
-.clang-format
 
 trunk
 main
