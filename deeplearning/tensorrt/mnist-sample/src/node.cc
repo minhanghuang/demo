@@ -2,13 +2,10 @@
 
 void Node::Init() {
   if (!ok_) return;
-  std::cout << "Init." << std::endl;
 }
 
 void Node::Build() {
   if (!ok_) return;
-  std::cout << "Build." << std::endl;
-  uint8_t fileData[INPUT_H * INPUT_W];
   LoadInputImages();
   PrintInputImages();
   ParserModelFile();
@@ -17,21 +14,19 @@ void Node::Build() {
 
 void Node::Inference() {
   if (!ok_) return;
-  IRuntime* runtime{createInferRuntime(gLogger_)};
+  nvinfer1::IRuntime* runtime{nvinfer1::createInferRuntime(gLogger_)};
   engine_ = runtime->deserializeCudaEngine(engine_string_.data(),
                                            engine_string_.size());
   if (!engine_) {
-    std::cout << "@@@@@@ Failed loading engine!" << std::endl;
+    std::cout << "Failed loading engine!" << std::endl;
     return;
   }
-  std::cout << "@@@@@@ Succeeded building engine!" << std::endl;
 
   // 2. context
   // 一个引擎可以有多个执行上下文，允许将一组权重用于多个重叠的推理任务
-  IExecutionContext* context = engine_->createExecutionContext();
+  nvinfer1::IExecutionContext* context = engine_->createExecutionContext();
 
   // 3. buffer
-
   // engine中输入和输出张量的总数量
   // 绑定的顺序通常是这样的：先是所有的输入绑定，然后是所有的输出绑定
   // 也就是说: 在张量的数组中, 前半部分全是输入张量的index,
@@ -43,24 +38,24 @@ void Node::Inference() {
   long unsigned int nOutput = 0;
   // 张量名
   std::vector<std::string> vTensorName(nIO);
-  for (int i = 0; i < nIO; ++i) {
+  for (int i = 0; i < nIO; i++) {
     vTensorName[i] = std::string(engine_->getIOTensorName(i));
-    // 张量自增
+    // 张量数量自增
     nInput += int(engine_->getTensorIOMode(vTensorName[i].c_str()) ==
-                  TensorIOMode::kINPUT);
+                  nvinfer1::TensorIOMode::kINPUT);
     nOutput += int(engine_->getTensorIOMode(vTensorName[i].c_str()) ==
-                   TensorIOMode::kOUTPUT);
+                   nvinfer1::TensorIOMode::kOUTPUT);
   }
 
   // 设置输入张量的形状: 4:张量的维度数量，{1, 1, x, y} 表示各个维度的大小。
   context->setInputShape(vTensorName[0].c_str(),
-                         Dims32{4, {1, 1, INPUT_H, INPUT_W}});
+                         nvinfer1::Dims32{4, {1, 1, INPUT_H, INPUT_W}});
 
   std::vector<int> vTensorSize(nIO, 0);  // 每个张量的大小
-  // 遍历所有张量
+  // 遍历所有张量, 计算每个张量需要开辟的空间
   for (int i = 0; i < nIO; ++i) {
     // 获取张量形状
-    Dims32 dim = context->getTensorShape(vTensorName[i].c_str());
+    nvinfer1::Dims32 dim = context->getTensorShape(vTensorName[i].c_str());
     int size = 1;
     // 遍历张量每个维度
     for (int j = 0; j < dim.nbDims; ++j) {
@@ -69,10 +64,10 @@ void Node::Inference() {
     // getTensorDataType: 获取指定张量的数据类型
     vTensorSize[i] =
         size *
-        dataTypeToSize(engine_->getTensorDataType(vTensorName[i].c_str()));
+        DataTypeToSize(engine_->getTensorDataType(vTensorName[i].c_str()));
   }
 
-  // buffer
+  // // buffer
   std::vector<void*> vBufferH{nIO, nullptr};
   std::vector<void*> vBufferD{nIO, nullptr};
   // 遍历所有张量
@@ -80,6 +75,13 @@ void Node::Inference() {
     // host buffer 开辟空间
     vBufferH[i] = (void*)new char[vTensorSize[i]];
     CHECK(cudaMalloc(&vBufferD[i], vTensorSize[i]));
+  }
+
+  // 为输入张量分配内存并填充数据
+  float* p_image_buffer = (float*)vBufferH[0];
+  for (int i = 0; i < INPUT_H * INPUT_W; ++i) {
+    // 黑底白字 + 归一化
+    p_image_buffer[i] = 1.0 - float(image_buffer_[i] / 255.0);
   }
 
   // copy buffer host to device
@@ -102,18 +104,14 @@ void Node::Inference() {
                      cudaMemcpyDeviceToHost));
   }
 
-  for (int i = 0; i < nIO; ++i) {
-    printArrayInformation((float*)vBufferH[i],
-                          context->getTensorShape(vTensorName[i].c_str()),
-                          vTensorName[i], true);
-  }
+  // 打印推理结果
+  PrintRestult((float*)vBufferH[1]);
 
   // free buffer
   for (int i = 0; i < nIO; ++i) {
     delete[] (char*)vBufferH[i];
     CHECK(cudaFree(vBufferD[i]));
   }
-  std::cout << "Inference end." << std::endl;
 }
 
 void Node::Destroy() {
@@ -130,6 +128,40 @@ void Node::ParserArgs(int argc, char* argv[]) {
   }
 }
 
+std::string Node::DataTypeToString(nvinfer1::DataType dataType) {
+  switch (dataType) {
+    case nvinfer1::DataType::kFLOAT:
+      return std::string("FP32 ");
+    case nvinfer1::DataType::kHALF:
+      return std::string("FP16 ");
+    case nvinfer1::DataType::kINT8:
+      return std::string("INT8 ");
+    case nvinfer1::DataType::kINT32:
+      return std::string("INT32");
+    case nvinfer1::DataType::kBOOL:
+      return std::string("BOOL ");
+    default:
+      return std::string("Unknown");
+  }
+}
+
+size_t Node::DataTypeToSize(nvinfer1::DataType dataType) {
+  switch ((int)dataType) {
+    case int(nvinfer1::DataType::kFLOAT):
+      return 4;
+    case int(nvinfer1::DataType::kHALF):
+      return 2;
+    case int(nvinfer1::DataType::kINT8):
+      return 1;
+    case int(nvinfer1::DataType::kINT32):
+      return 4;
+    case int(nvinfer1::DataType::kBOOL):
+      return 1;
+    default:
+      return 4;
+  }
+}
+
 void Node::ParserModelFile() {
   if (0 == access(plan_path_.c_str(), F_OK)) {
     return;
@@ -137,25 +169,27 @@ void Node::ParserModelFile() {
   // 没有plan文件
   std::cout << "没有plan文件" << std::endl;
   // 1. builder
-  IBuilder* builder = createInferBuilder(gLogger_);
+  nvinfer1::IBuilder* builder = nvinfer1::createInferBuilder(gLogger_);
 
   // 2. profile
-  IOptimizationProfile* profile = builder->createOptimizationProfile();
+  nvinfer1::IOptimizationProfile* profile =
+      builder->createOptimizationProfile();
 
   // 3. config
-  IBuilderConfig* config = builder->createBuilderConfig();
-  config->setMemoryPoolLimit(MemoryPoolType::kWORKSPACE, 1 << 30);
+  nvinfer1::IBuilderConfig* config = builder->createBuilderConfig();
+  config->setMemoryPoolLimit(nvinfer1::MemoryPoolType::kWORKSPACE, 1 << 30);
 
   // 4. network
-  INetworkDefinition* network = builder->createNetworkV2(
-      1U << int(NetworkDefinitionCreationFlag::kEXPLICIT_BATCH));
+  nvinfer1::INetworkDefinition* network = builder->createNetworkV2(
+      1U << int(nvinfer1::NetworkDefinitionCreationFlag::kEXPLICIT_BATCH));
 
   // 5. parser
+  // parse onnx model file
   nvonnxparser::IParser* parser =
       nvonnxparser::createParser(*network, gLogger_);
-  if (!parser->parseFromFile(model_path_.c_str(),
-                             static_cast<int>(ILogger::Severity::kINFO))) {
-    std::cout << "@@@@@@@@@ parser error." << std::endl;
+  if (!parser->parseFromFile(
+          model_path_.c_str(),
+          static_cast<int>(nvinfer1::ILogger::Severity::kINFO))) {
     return;
   }
 
@@ -197,17 +231,34 @@ void Node::LoadInputImages() {
   std::string magic, h, w, max;
   infile >> magic >> h >> w >> max;
   infile.seekg(1, infile.cur);
-  infile.read(reinterpret_cast<char*>(target_buffer_), INPUT_H * INPUT_W);
-  // 归一化
-  for (int i = 0; i < INPUT_H * INPUT_W; i++) {
-    target_buffer_[i] = target_buffer_[i] / 255;
-  }
+  infile.read(reinterpret_cast<char*>(image_buffer_), INPUT_H * INPUT_W);
 }
 
 void Node::PrintInputImages() {
   std::cout << "\nInput:\n" << std::endl;
   for (int i = 0; i < INPUT_H * INPUT_W; i++) {
-    std::cout << (" .:-=+*#%@"[target_buffer_[i] * 255 / 26])
+    std::cout << (" .:-=+*#%@"[image_buffer_[i] / 26])
               << (((i + 1) % INPUT_W) ? "" : "\n");
+  }
+}
+
+void Node::PrintRestult(float* output_buffer_h) {
+  double sum = 0.0;
+  double buffer[OUTPUT_SIZE];
+
+  // 计算指数部分的和
+  for (int i = 0; i < OUTPUT_SIZE; i++) {
+    sum += exp(output_buffer_h[i]);
+  }
+
+  // 计算softmax概率
+  std::cout << "Optput:" << std::endl;
+  for (int i = 0; i < OUTPUT_SIZE; i++) {
+    buffer[i] = exp(output_buffer_h[i]) / sum;
+    std::cout << " Prob " << i << "  " << std::fixed << std::setw(5)
+              << std::setprecision(4) << buffer[i] << " "
+              << "Class " << i << ": "
+              << std::string(int(std::floor(buffer[i] * 10 + 0.5f)), '*')
+              << std::endl;
   }
 }
