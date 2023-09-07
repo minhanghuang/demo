@@ -33,7 +33,7 @@ file(GLOB SRC
   "src/*.cc"
 )
 
-add_executable(${TARGET_NAME} 
+add_executable(${TARGET_NAME}
   main.cc
   ${SRC}
 )
