@@ -134,11 +134,19 @@ void Node::Destroy() {
 
 void Node::ParserArgs(int argc, char* argv[]) {
   if (1 == argc) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dis(0, 9);
+    int random_value = dis(gen);
+    image_path_ = std::string("./data/mnist/") + std::to_string(random_value) +
+                  std::string(".pgm");
+
   } else if (2 == argc) {
     image_path_ = argv[1];
   } else {
     ok_ = false;
   }
+  std::cout << "image path: " << image_path_ << std::endl;
 }
 
 std::string Node::DataTypeToString(nvinfer1::DataType dataType) {

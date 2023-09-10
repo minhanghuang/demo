@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5.1)
 
-project(mnist-tensorrt VERSION 0.0.0)
+project(tensorrt-samples VERSION 0.0.0)
 
 set(TARGET_NAME ${PROJECT_NAME})
 set(CMAKE_CXX_STANDARD 14)
@@ -29,28 +29,9 @@ include_directories(
   ${CUDA_INCLUDE_DIRS}
 )
 
-file(GLOB SRC
-  "src/*.cc"
-)
-
-add_executable(${TARGET_NAME}
-  main.cc
-  ${SRC}
-)
-
-target_link_libraries(${TARGET_NAME}
-  ${CUDA_LIBRARIES}
-  ${TENSORRT_LIBRARIES}
-)
+add_subdirectory(mnist)
 
 file(COPY data/
   DESTINATION ${CMAKE_BINARY_DIR}/data/
-)
-
-install(TARGETS ${TARGET_NAME}
-  EXPORT ${TARGET_NAME}-targets
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  RUNTIME DESTINATION bin
 )
 

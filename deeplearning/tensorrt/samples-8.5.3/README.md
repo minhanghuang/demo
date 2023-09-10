@@ -13,6 +13,7 @@ TensorRT version: 8.5.4
 ```shell
 mkdir build && cd build
 cmake ..
-make -j$(nproc) && ./mnist-tensorrt ./data/0.pgm
+make -j$(nproc) 
+./mnist/mnist-sample ./data/mnist/0.pgm
 ```
 

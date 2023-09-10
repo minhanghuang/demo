@@ -9,6 +9,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <fstream>
+#include <random>
 #include <iomanip>
 #include <iostream>
 #include <map>
@@ -92,8 +93,8 @@ class Node {
 
   uint8_t image_buffer_[INPUT_H * INPUT_W];
 
-  std::string model_path_ = "./data/mnist.onnx";
-  std::string plan_path_ = "./data/mnist.plan";
+  std::string model_path_ = "./data/mnist/mnist.onnx";
+  std::string plan_path_ = "./data/mnist/mnist.plan";
   std::string image_path_;
 };
 
