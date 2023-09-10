@@ -40,6 +40,7 @@ void Node::Inference() {
   std::vector<std::string> tensor_name(num_io_tensors);
   for (int i = 0; i < num_io_tensors; i++) {
     tensor_name[i] = std::string(engine_->getIOTensorName(i));
+    std::cout << "tensor name" << i << ":" << tensor_name[i] << std::endl;
     // 张量数量自增
     if (nvinfer1::TensorIOMode::kINPUT ==
         engine_->getTensorIOMode(tensor_name[i].c_str())) {
@@ -99,8 +100,16 @@ void Node::Inference() {
   }
 
   // 4. execute
-  // 推理
-  context->enqueueV3(0);
+  // 推理: 异步
+  bool status = context->enqueueV3(0);  //  0 表示默认的CUDA流
+
+  // 推理: 同步, 推理操作会阻塞执行线程，直到推理完成
+  // bool status = context->executeV2(buffer_d.data());
+
+  if (!status) {
+    std::cout << "inference fault" << std::endl;
+    return;
+  }
 
   // copy buffer device to host
   for (int i = n_input_tensors; i < num_io_tensors; ++i) {
