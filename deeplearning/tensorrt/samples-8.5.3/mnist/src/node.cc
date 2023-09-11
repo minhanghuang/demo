@@ -247,7 +247,8 @@ void Node::LoadInputImages() {
   std::string magic, h, w, max;
   infile >> magic >> h >> w >> max;
   infile.seekg(1, infile.cur);
-  infile.read(reinterpret_cast<char*>(image_buffer_), INPUT_H * INPUT_W);
+  image_buffer_.resize(INPUT_H * INPUT_W);
+  infile.read(reinterpret_cast<char*>(image_buffer_.data()), INPUT_H * INPUT_W);
 }
 
 void Node::PrintInputImages() {

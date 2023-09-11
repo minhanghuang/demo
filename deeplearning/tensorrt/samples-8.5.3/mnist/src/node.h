@@ -7,12 +7,13 @@
 #include <unistd.h>
 
 #include <cmath>
+#include <cstdint>
 #include <cstdlib>
 #include <fstream>
-#include <random>
 #include <iomanip>
 #include <iostream>
 #include <map>
+#include <random>
 #include <string>
 #include <thread>
 #include <vector>
@@ -91,7 +92,7 @@ class Node {
 
   static const int OUTPUT_SIZE = 10;
 
-  uint8_t image_buffer_[INPUT_H * INPUT_W];
+  std::vector<uint8_t> image_buffer_;
 
   std::string model_path_ = "./data/mnist/mnist.onnx";
   std::string plan_path_ = "./data/mnist/mnist.plan";
