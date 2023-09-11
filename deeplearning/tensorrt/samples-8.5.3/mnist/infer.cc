@@ -1,4 +1,4 @@
-#include "node.h"
+#include "infer.h"
 
 void Node::Init() {
   if (!ok_) return;
@@ -147,23 +147,6 @@ void Node::ParserArgs(int argc, char* argv[]) {
     ok_ = false;
   }
   std::cout << "image path: " << image_path_ << std::endl;
-}
-
-std::string Node::DataTypeToString(nvinfer1::DataType dataType) {
-  switch (dataType) {
-    case nvinfer1::DataType::kFLOAT:
-      return std::string("FP32 ");
-    case nvinfer1::DataType::kHALF:
-      return std::string("FP16 ");
-    case nvinfer1::DataType::kINT8:
-      return std::string("INT8 ");
-    case nvinfer1::DataType::kINT32:
-      return std::string("INT32");
-    case nvinfer1::DataType::kBOOL:
-      return std::string("BOOL ");
-    default:
-      return std::string("Unknown");
-  }
 }
 
 size_t Node::DataTypeToSize(nvinfer1::DataType dataType) {

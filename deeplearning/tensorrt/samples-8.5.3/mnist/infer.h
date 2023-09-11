@@ -57,8 +57,6 @@ class Node {
   // 解析参数
   void ParserArgs(int argc, char* argv[]);
 
-  std::string DataTypeToString(nvinfer1::DataType dataType);
-
   size_t DataTypeToSize(nvinfer1::DataType dataType);
 
   // 解析模型文件

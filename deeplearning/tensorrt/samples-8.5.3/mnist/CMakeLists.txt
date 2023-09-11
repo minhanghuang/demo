@@ -5,11 +5,10 @@ project(mnist-sample VERSION 0.0.0)
 set(TARGET_NAME ${PROJECT_NAME})
 
 file(GLOB SRC
-  "src/*.cc"
+  "*.cc"
 )
 
 add_executable(${TARGET_NAME}
-  main.cc
   ${SRC}
 )
 

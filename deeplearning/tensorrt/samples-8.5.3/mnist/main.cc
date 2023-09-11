@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "src/node.h"
+#include "infer.h"
 
 /*
 * Input:
