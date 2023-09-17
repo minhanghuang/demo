@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "mnist.h"
+#include "dynamic-reshape.h"
 
 /*
 * Input:
@@ -15,10 +15,9 @@ white foreground (the number should be in white). Color value is scaled to
 */
 int main(int argc, char* argv[]) {
   std::cout << "Hello TensorRT" << std::endl;
-  Mnist node(argc, argv);
-  node.Init();
-  node.Build();
-  node.Inference();
-  node.Destroy();
+  DynamicReshape trt;
+  trt.Init(argc, argv);
+  trt.Build();
+  trt.Inference();
   return EXIT_SUCCESS;
 }

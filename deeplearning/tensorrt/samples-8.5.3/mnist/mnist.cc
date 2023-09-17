@@ -1,10 +1,10 @@
-#include "infer.h"
+#include "mnist.h"
 
-void Node::Init() {
+void Mnist::Init() {
   if (!ok_) return;
 }
 
-void Node::Build() {
+void Mnist::Build() {
   if (!ok_) return;
   LoadInputImages();
   PrintInputImages();
@@ -12,7 +12,7 @@ void Node::Build() {
   ParserPlanFile();
 }
 
-void Node::Inference() {
+void Mnist::Inference() {
   if (!ok_) return;
   nvinfer1::IRuntime* runtime{nvinfer1::createInferRuntime(logger_)};
   engine_ = runtime->deserializeCudaEngine(engine_string_.data(),
@@ -127,12 +127,12 @@ void Node::Inference() {
   }
 }
 
-void Node::Destroy() {
+void Mnist::Destroy() {
   if (!ok_) return;
   ok_ = true;
 }
 
-void Node::ParserArgs(int argc, char* argv[]) {
+void Mnist::ParserArgs(int argc, char* argv[]) {
   if (1 == argc) {
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -149,7 +149,7 @@ void Node::ParserArgs(int argc, char* argv[]) {
   std::cout << "image path: " << image_path_ << std::endl;
 }
 
-size_t Node::DataTypeToSize(nvinfer1::DataType dataType) {
+size_t Mnist::DataTypeToSize(nvinfer1::DataType dataType) {
   switch ((int)dataType) {
     case int(nvinfer1::DataType::kFLOAT):
       return 4;
@@ -166,7 +166,7 @@ size_t Node::DataTypeToSize(nvinfer1::DataType dataType) {
   }
 }
 
-void Node::ParserModelFile() {
+void Mnist::ParserModelFile() {
   if (0 == access(plan_path_.c_str(), F_OK)) {
     return;
   }
@@ -215,7 +215,7 @@ void Node::ParserModelFile() {
   delete builder;
 }
 
-void Node::ParserPlanFile() {
+void Mnist::ParserPlanFile() {
   std::ifstream plan_file(plan_path_, std::ios::binary);
   long int fsize = 0;
   plan_file.seekg(0, plan_file.end);
@@ -225,7 +225,7 @@ void Node::ParserPlanFile() {
   plan_file.read(engine_string_.data(), engine_string_.size());
 }
 
-void Node::LoadInputImages() {
+void Mnist::LoadInputImages() {
   std::ifstream infile(image_path_, std::ifstream::binary);
   std::string magic, h, w, max;
   infile >> magic >> h >> w >> max;
@@ -234,7 +234,7 @@ void Node::LoadInputImages() {
   infile.read(reinterpret_cast<char*>(image_buffer_.data()), INPUT_H * INPUT_W);
 }
 
-void Node::PrintInputImages() {
+void Mnist::PrintInputImages() {
   std::cout << "\nInput:\n" << std::endl;
   for (int i = 0; i < INPUT_H * INPUT_W; i++) {
     std::cout << (" .:-=+*#%@"[image_buffer_[i] / 26])
@@ -242,7 +242,7 @@ void Node::PrintInputImages() {
   }
 }
 
-void Node::PrintRestult(float* output_buffer_h) {
+void Mnist::PrintRestult(float* output_buffer_h) {
   double sum = 0.0;
   double buffer[OUTPUT_SIZE];
 

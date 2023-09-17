@@ -36,10 +36,10 @@ class Logger : public nvinfer1::ILogger {
   }
 };
 
-class Node {
+class Mnist {
  public:
-  ~Node() = default;
-  Node(int argc, char* argv[]) : ok_(true) { ParserArgs(argc, argv); }
+  ~Mnist() = default;
+  Mnist(int argc, char* argv[]) : ok_(true) { ParserArgs(argc, argv); }
 
   /// 初始化数据
   void Init();

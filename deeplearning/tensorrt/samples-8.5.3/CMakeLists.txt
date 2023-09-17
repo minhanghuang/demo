@@ -30,6 +30,7 @@ include_directories(
 )
 
 add_subdirectory(mnist)
+add_subdirectory(dynamic-reshape)
 
 file(COPY data/
   DESTINATION ${CMAKE_BINARY_DIR}/data/
