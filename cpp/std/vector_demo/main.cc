@@ -1,4 +1,4 @@
-#include <algorithm>
+#include <algorithm>  // 包含头文件以使用 std::max_element
 #include <iostream>
 #include <vector>
 
@@ -90,6 +90,20 @@ int main(int argc, char* argv[]) {
     std::stable_partition(a.begin(), a.end(), [](int x) { return x >= 0; });
     for (const auto& v : a) {
       std::cout << "v: " << v << std::endl;
+    }
+  }
+
+  {
+    std::cout << "@@@@@@@@@@@@@  最大元素 @@@@@@@@@@@@@ " << std::endl;
+    std::vector<int> numbers = {5, 2, 9, 1, 5, 6, 3};
+    // 使用 std::max_element 查找最大元素
+    std::vector<int>::iterator max_it =
+        std::max_element(numbers.begin(), numbers.end());
+    if (max_it != numbers.end()) {
+      int max_value = *max_it;
+      std::cout << "Max element is: " << max_value << std::endl;
+    } else {
+      std::cout << "Container is empty." << std::endl;
     }
   }
   return 0;
