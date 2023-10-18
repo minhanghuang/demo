@@ -20,10 +20,14 @@ link_directories (
 
 add_executable(sub sub.cc)
 add_executable(pub pub.cc)
+add_executable(test test.cc)
 
 target_link_libraries(pub
   ${RosCpp_LIBRARIES}
 )
 target_link_libraries(sub
+  ${RosCpp_LIBRARIES}
+)
+target_link_libraries(test
   ${RosCpp_LIBRARIES}
 )
