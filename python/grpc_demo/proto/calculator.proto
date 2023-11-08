@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package calculator;
+
+message AddRequest {
+  int32 num1 = 1;
+  int32 num2 = 2;
+}
+
+message AddResponse {
+  int32 result = 1;
+}
+
+message SubtractRequest {
+  int32 minuend = 1;
+  int32 subtrahend = 2;
+}
+
+message SubtractResponse {
+  int32 result = 1;
+}
+
+service Calculator {
+  rpc Add (AddRequest) returns (AddResponse);
+  rpc Subtract (SubtractRequest) returns (SubtractResponse);
+}
+
+// 安装: python3 -m pip install grpcio grpcio-tools
+// python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. calculator.proto
+// -I.：这是一个选项，用于指定包含 .proto 文件的目录。在这种情况下，. 表示当前目录，也就是 calculator.proto 文件所在的目录。-I 选项用于告诉 protoc 命令去哪里查找 .proto 文件。
+// --python_out=.：这是一个选项，用于指定生成的 Python protobuf 代码的输出目录。在这里，--python_out=. 表示生成的代码将输出到当前目录。生成的代码将包括 calculator_pb2.py 文件，其中包含了 protobuf 消息的定义。
+// --grpc_python_out=.：这是另一个选项，用于指定生成的 gRPC Python 代码的输出目录。与前面类似，--grpc_python_out=. 表示生成的代码将输出到当前目录。生成的代码将包括 calculator_pb2_grpc.py 文件，其中包含了 gRPC 服务的定义。
