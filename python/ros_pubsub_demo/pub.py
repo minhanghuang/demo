@@ -7,7 +7,7 @@ from std_msgs.msg import String
 if __name__ == '__main__':
 
     print("pub")
-    rospy.init_node('talker', anonymous=True)
+    rospy.init_node('test_talker_node', anonymous=True)
     pub = rospy.Publisher('/chatter', String, queue_size=1)
     rate = rospy.Rate(10)
     while not rospy.is_shutdown():
