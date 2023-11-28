@@ -20,6 +20,12 @@ class Subscriber(object):
             self.chatter2_callback,
             queue_size=1,
         )
+        rospy.Subscriber(
+            "/chatter3",
+            String,
+            lambda msg: print(f"Received message: {msg.data}"),
+            queue_size=1,
+        )
 
     # 装饰器函数
     def timing_decorator(param):
@@ -30,7 +36,7 @@ class Subscriber(object):
                 result = callback(self, msg)
                 print("after")
                 return result
-            return wrapper 
+            return wrapper
         return decorator
 
     @timing_decorator(1)
