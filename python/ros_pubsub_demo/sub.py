@@ -26,6 +26,10 @@ class Subscriber(object):
             lambda msg: print(f"Received message: {msg.data}"),
             queue_size=1,
         )
+        rospy.Subscriber("/chatter3", String, self.any_callback,
+                         callback_args={'topic': "/chatter3"})
+        rospy.Subscriber("/chatter2", String, self.any_callback,
+                         callback_args={'topic': "/chatter2"})
 
     # 装饰器函数
     def timing_decorator(param):
@@ -46,6 +50,11 @@ class Subscriber(object):
 
     def chatter2_callback(self, msg):
         print("msg:", msg)
+        return None
+
+    def any_callback(self, msg, topic):
+        print("msg:", msg)
+        print("topic:", topic)
         return None
 
     def run(self):
