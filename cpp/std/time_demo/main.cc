@@ -1,6 +1,7 @@
 #include <chrono>
 #include <ctime>
 #include <iostream>
+#include <string>
 #include <thread>
 #include <vector>
 
@@ -13,6 +14,32 @@ bool IsTimePastPeriod(std::chrono::system_clock::time_point t,
 
 int main(int argc, char* argv[]) {
   std::cout << "Hello Time." << std::endl;
+
+  {
+    std::cout << "@@@@@ 时间戳 @@@@@" << std::endl;
+    auto timestamp = std::chrono::system_clock::now().time_since_epoch();
+    auto seconds = std::chrono::duration_cast<std::chrono::seconds>(timestamp);
+    auto milliseconds =
+        std::chrono::duration_cast<std::chrono::milliseconds>(timestamp);
+    std::cout << "timestamp(单位:s): " << seconds.count() << std::endl;
+    std::cout << "timestamp(单位:ms): " << milliseconds.count() << std::endl;
+    std::cout << "timestamp(单位:ns): " << timestamp.count() << std::endl;
+  }
+
+  {
+    std::cout << "@@@@@ 时间戳转字符串时间 @@@@@" << std::endl;
+    // 获取当前时间戳
+    auto timestamp = std::chrono::system_clock::now().time_since_epoch();  // ns
+    auto seconds = std::chrono::duration_cast<std::chrono::seconds>(timestamp);
+    time_t rawtime = seconds.count();
+
+    // 将时间戳转换为时间字符串
+    char buf[32];
+    std::strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S",
+                  std::localtime(&rawtime));
+    // 输出时间字符串
+    std::cout << "current time: " << buf << std::endl;
+  }
 
   {
     std::cout << "@@@@@ 时间差 @@@@@" << std::endl;
