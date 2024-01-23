@@ -9,6 +9,14 @@ from base import WebSocketHandlerBase
 
 class OkAPI(RequestHandlerBase):
 
+    def get(self):
+
+        self.response({
+            "success": True,
+            "msg": "ok",
+            "results": None
+        }, status=200)
+
     def post(self, *args, **kwargs):
 
         req = self.get_request()
@@ -34,7 +42,6 @@ class WebSocketAPI(WebSocketHandlerBase):
         self.user_pool.add(self)
         print("open user count:{}".format(len(self.user_pool)))
 
-
     def on_close(self):
         """
         客户端down后, 回调函数
@@ -44,12 +51,10 @@ class WebSocketAPI(WebSocketHandlerBase):
         self.user_pool.remove(self)
         print("close user count:{}".format(len(self.user_pool)))
 
-
     def on_pong(self, data):
 
         for user in self.user_pool:
-            user.write_message({"msg":"ws"})
-
+            user.write_message({"msg": "ws"})
 
 
 if __name__ == '__main__':
@@ -61,8 +66,8 @@ if __name__ == '__main__':
         (r"/api/ok/", OkAPI),
         (r"/api/ws/", WebSocketAPI),
     ],
-        debug=False,
-        websocket_ping_interval=1/5,
+        debug=True,
+        websocket_ping_interval=1 / 5,
         websocket_ping_timeout=1000,
     )
     http_server = tornado.httpserver.HTTPServer(app)
