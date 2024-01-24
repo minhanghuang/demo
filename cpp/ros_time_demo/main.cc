@@ -2,6 +2,7 @@
 #include <ros/rate.h>
 #include <ros/ros.h>
 #include <ros/spinner.h>
+#include <ros/time.h>
 #include <std_msgs/String.h>
 
 void Chatcb(const std_msgs::String& msg) {
@@ -13,27 +14,34 @@ int main(int argc, char** argv) {
   ros::init(argc, argv, "time_demo");
   ros::NodeHandle nh;
 
-  // {
-  //   std::cout << "@@@@@ Rate: 频率 @@@@@" << std::endl;
-  //   const double t = 10;  // 10Hz
-  //   ros::Rate rate(t);
-  //   while (ros::ok()) {
-  //     ros::spinOnce();
-  //     rate.sleep();
-  //   }
-  //   return 0;
-  // }
+  {
+    std::cout << "@@@@@ Time @@@@@" << std::endl;
+    ros::Time t;
+    std::cout << "sec: " << t.sec << std::endl;    // 默认: 0
+    std::cout << "nsec: " << t.nsec << std::endl;  // 默认: 0
+  }
 
-  // {
-  //   std::cout << "@@@@@ Duration: 一段时间 @@@@@" << std::endl;
-  //   const double t = 0.1;  // 10Hz
-  //   ros::Duration duration(t);
-  //   while (ros::ok()) {
-  //     ros::spinOnce();
-  //     duration.sleep();
-  //   }
-  //   return 0;
-  // }
+  {
+    std::cout << "@@@@@ Rate: 频率 @@@@@" << std::endl;
+    const double t = 10;  // 10Hz
+    ros::Rate rate(t);
+    while (ros::ok()) {
+      ros::spinOnce();
+      rate.sleep();
+    }
+    return 0;
+  }
+
+  {
+    std::cout << "@@@@@ Duration: 一段时间 @@@@@" << std::endl;
+    const double t = 0.1;  // 10Hz
+    ros::Duration duration(t);
+    while (ros::ok()) {
+      ros::spinOnce();
+      duration.sleep();
+    }
+    return 0;
+  }
 
   {
     std::cout << "@@@@@ Rate -> Duration  @@@@@" << std::endl;
