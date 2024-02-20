@@ -2,22 +2,22 @@
 #include <functional>
 #include <memory>
 #include <string>
+
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp>
 
 using namespace std::chrono_literals;
 
-
 class MyNode : public rclcpp::Node {
  public:
-  MyNode() : Node("pub_class_node"), count_(0) {
+  MyNode() : Node("test_pub_class_node"), count_(0) {
     pub_ = this->create_publisher<std_msgs::msg::String>("/topic", 10);
-    timer_ = this->create_wall_timer(
-        500ms, std::bind(&MyNode::timer_callback, this));
+    timer_ =
+        this->create_wall_timer(500ms, std::bind(&MyNode::TimerCallback, this));
   }
 
  private:
-  void timer_callback() {
+  void TimerCallback() {
     auto msg = std_msgs::msg::String();
     msg.data = "Hello, world! " + std::to_string(count_++);
     std::cout << "pub " << msg.data.c_str() << std::endl;
