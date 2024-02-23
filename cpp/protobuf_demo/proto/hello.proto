@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+message Person {
+  string name = 1;
+  int32 age = 2;
+  repeated string hobbies = 3;
+}
+
+message AddressBook {
+  repeated Person people = 1;
+}
+
+// protoc -I=. --cpp_out=. *.proto
