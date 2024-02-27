@@ -1,9 +1,12 @@
 syntax = "proto3";
 
+import "google/protobuf/timestamp.proto";
+
 message Person {
   string name = 1;
   int32 age = 2;
   repeated string hobbies = 3;
+  google.protobuf.Timestamp birth_date = 4;
 }
 
 message AddressBook {
