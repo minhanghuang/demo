@@ -5,7 +5,6 @@ set(TARGET_NAME ${PROJECT_NAME})
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-find_package(Threads REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(Tinyxml2 REQUIRED tinyxml2)
 
@@ -17,9 +16,14 @@ link_directories (
   ${Tinyxml2_LIBRARY_DIRS}
 )
 
-add_executable(${TARGET_NAME}_runner main.cc)
+add_executable(read_runner read_main.cc)
+add_executable(write_runner write_main.cc)
 
-target_link_libraries(${TARGET_NAME}_runner
+target_link_libraries(read_runner
+  ${Tinyxml2_LIBRARIES}
+)
+
+target_link_libraries(write_runner
   ${Tinyxml2_LIBRARIES}
 )
 
