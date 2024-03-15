@@ -1,0 +1,5 @@
+fastapi==0.85.0
+ujson
+uvicorn[standard]
+requests
+websocket-client
