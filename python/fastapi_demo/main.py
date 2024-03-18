@@ -2,6 +2,7 @@ import json
 import uvicorn
 import asyncio
 import logging
+from typing_extensions import Dict
 from fastapi import FastAPI, WebSocket, Request, responses
 
 app = FastAPI()
@@ -12,8 +13,8 @@ async def ws_ok(websocket: WebSocket):
     await websocket.accept()
     try:
         while True:
-            data = await websocket.receive_json()
-            print(f"receive data: {data}")
+            data: Dict = await websocket.receive_json()
+            print(f"receive data: {data} type: {type(data)}")
             await websocket.send_bytes(json.dumps(data))
             await asyncio.sleep(0.3)
     except Exception as e:
