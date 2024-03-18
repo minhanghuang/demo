@@ -12,7 +12,7 @@ class Animal {
  public:
   Animal() = default;
   Animal(const std::string& name) : name_(name){};
-  ~Animal() = default;
+  virtual ~Animal() = default;
 
   void set_name(const std::string& name) { name_ = name; }
   std::string name() { return name_; }
@@ -24,8 +24,10 @@ class Animal {
 class Cat : public Animal {
  public:
   Cat() = default;
+  ~Cat() = default;
   Cat(const std::string& name) : Animal(name) {}
-  virtual ~Cat() = default;
+
+  const std::string& sound() const { return sound_; }
 
  private:
   const std::string sound_ = "喵";
@@ -34,8 +36,10 @@ class Cat : public Animal {
 class Dog : public Animal {
  public:
   Dog() = default;
+  ~Dog() = default;
   Dog(const std::string& name) : Animal(name) {}
-  virtual ~Dog() = default;
+
+  const std::string& sound() const { return sound_; }
 
  private:
   const std::string sound_ = "汪";
@@ -43,6 +47,22 @@ class Dog : public Animal {
 
 int main(int argc, char* argv[]) {
   std::cout << "Hello, Ptr" << std::endl;
+
+  {
+    std::cout << "@@@@@ 类型转换 @@@@@" << std::endl;
+    std::shared_ptr<Animal> a1 = std::make_shared<Cat>("Tom");
+    std::cout << "name: " << a1->name() << std::endl;
+
+    std::shared_ptr<Cat> c1 = std::static_pointer_cast<Cat>(a1);
+    std::cout << "name: " << c1->name() << std::endl;
+    std::cout << "sound: " << c1->sound() << std::endl;
+    c1->set_name("Tom2");
+
+    std::shared_ptr<Cat> c2 = std::dynamic_pointer_cast<Cat>(a1);
+    std::cout << "name: " << c2->name() << std::endl;
+    std::cout << "sound: " << c2->sound() << std::endl;
+  }
+
   {
     std::cout << "@@@@@ 智能指针深拷贝 @@@@@" << std::endl;
     std::shared_ptr<Cat> tom_cat = std::make_shared<Cat>("Tom");
@@ -69,5 +89,6 @@ int main(int argc, char* argv[]) {
     assert(copy_cat->name() == "X");
     assert(tom_cat->name() == "X");
   }
+
   return 0;
 }
