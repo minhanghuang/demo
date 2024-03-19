@@ -22,11 +22,17 @@ class IoTDBConnection:
     def close(self):
         return self.__session.close()
 
-    def query(self, sql):
+    def query(self, sql: str):
         return self.__session.execute_query_statement(sql)
 
-    def insert(self, tablet):
+    def non_query(self, sql: str):
+        return self.__session.execute_non_query_statement(sql)
+
+    def insert(self, tablet: Tablet):
         return self.__session.insert_tablet(tablet)
+
+    def __dir__(self):
+        self.__session.close()
 
 
 def main():
@@ -83,7 +89,22 @@ def main():
     df = result.todf()
     print(df.head())
 
-    conn.close()
+    # 删除
+    print("--- 删除数据")
+    sql = "delete from root.minite.tags_offline where time >= 1 AND time < 3"
+    conn.non_query(sql=sql)
+    sql = "select * from root.minite.tags_offline"
+    result = conn.query(sql=sql)
+    df = result.todf()
+    print(df.head())
+
+    print("--- 删除存储组")
+    sql = "delete storage group root.minite"
+    conn.non_query(sql=sql)
+    sql = "select * from root.minite.tags_offline"
+    result = conn.query(sql=sql)
+    df = result.todf()
+    print(df.head())
 
 
 if __name__ == "__main__":
