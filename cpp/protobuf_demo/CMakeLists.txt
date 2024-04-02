@@ -5,7 +5,6 @@ set(TARGET_NAME ${PROJECT_NAME})
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# find_package(PkgConfig REQUIRED)
 find_package(Protobuf REQUIRED)
 
 include_directories(

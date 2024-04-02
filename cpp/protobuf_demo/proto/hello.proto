@@ -2,15 +2,36 @@ syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
 
+message Interest {
+  string topic = 1;
+  int32 level = 2;
+  repeated double value = 3;
+}
+
+message Education {
+  string institution = 1;
+  string degree = 2;
+  google.protobuf.Timestamp graduation_date = 3;
+}
+
+message Job {
+  string company = 1;
+  string position = 2;
+  google.protobuf.Timestamp start_date = 3;
+  google.protobuf.Timestamp end_date = 4;
+}
+
 message Person {
   string name = 1;
   int32 age = 2;
   repeated string hobbies = 3;
   google.protobuf.Timestamp birth_date = 4;
+  repeated Interest interests = 5;
+  repeated Education educations = 6;
+  repeated Job jobs = 7;
 }
 
 message AddressBook {
   repeated Person people = 1;
 }
 
-// protoc -I=. --cpp_out=. *.proto
