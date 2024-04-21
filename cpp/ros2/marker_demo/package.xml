@@ -4,7 +4,7 @@
   <name>marker_demo</name>
   <version>0.0.0</version>
   <description>Marker Demo</description>
-  <maintainer email="job@minhang.me">trunk</maintainer>
+  <maintainer email="job@minhang.me">huang minhang</maintainer>
   <license>TODO: License declaration</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
