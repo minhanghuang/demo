@@ -18,6 +18,9 @@ build_thirdparty.sh
 *.db
 install/
 log/
+logs/
+devel/
+.catkin_tools/
 
 __pycache__
 log/*

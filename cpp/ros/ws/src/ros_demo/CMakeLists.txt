@@ -27,7 +27,12 @@ target_link_libraries(pub_node
   ${catkin_LIBRARIES}
 )
 
-install(TARGETS pub_node
+add_executable(sub_node src/sub.cc)
+target_link_libraries(sub_node
+  ${catkin_LIBRARIES}
+)
+
+install(TARGETS pub_node sub_node
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
