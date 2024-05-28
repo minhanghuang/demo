@@ -81,5 +81,24 @@ int main(int argc, char* argv[]) {
      **/
   }
 
+  {
+    std::cout << "repeated 添加" << std::endl;
+    {
+      Person person = Person();
+      for (int i = 0; i < 10; i++) {
+        auto interest = person.add_interests();
+        interest->set_level(i);
+      }
+      std::cout << "person: " << person.DebugString() << std::endl;
+    }
+    {
+      Person person = Person();
+      Interest interest;
+      interest.set_level(1);
+      *person.mutable_interests()->Add() = interest;
+      std::cout << "person: " << person.DebugString() << std::endl;
+    }
+  }
+
   return 0;
 }
