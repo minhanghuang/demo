@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 
 #include <nlohmann/json.hpp>
 
@@ -29,6 +30,18 @@ int main() {
 
     std::cout << "default:" << dump_default.size() << std::endl;
     std::cout << "0:" << dump_0.size() << std::endl;
+  }
+
+  {
+    std::cout << "@@@@@ 数据类型转换 @@@@@" << std::endl;
+    std::string s =
+        "{ \"happy\": true, \"pi\": 3.141,  \"name\": \"\",  \"age\": 99 }";
+    nlohmann::json js = nlohmann::json::parse(s);
+    std::cout << "json: " << js << std::endl;
+    // std::string pi = js["pi"].get<std::string>(); // err
+    // std::string pi(js["pi"].dump()); // ok
+    std::string pi = js["pi"].dump();  // ok
+    std::cout << "string pi: " << pi << std::endl;
   }
   return 0;
 }
