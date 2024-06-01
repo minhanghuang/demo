@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/trunk/work/code/github/demo/cpp/ros2/rviz2_demo/build/rviz2_demo",
+  "command": "/usr/bin/c++ -DDEFAULT_RMW_IMPLEMENTATION=rmw_fastrtps_cpp -DRCUTILS_ENABLE_FAULT_INJECTION -DSPDLOG_COMPILED_LIB -isystem /opt/ros/foxy/include  -o CMakeFiles/rviz2_demo_node.dir/src/main.cc.o -c /home/trunk/work/code/github/demo/cpp/ros2/rviz2_demo/src/main.cc",
+  "file": "/home/trunk/work/code/github/demo/cpp/ros2/rviz2_demo/src/main.cc"
+}
+]

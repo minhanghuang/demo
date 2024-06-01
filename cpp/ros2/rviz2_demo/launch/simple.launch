@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- 启动节点 -->
+  <node pkg="rviz2_demo" exec="rviz2_demo_node" name="rviz2_demo_node" output="screen"/>
+
+  <!-- 加载 RViz -->
+  <node pkg="rviz2" exec="rviz2" name="rviz2" args="-d $(find-pkg-share rviz2_demo)/rviz/simple_rviz.rviz"/>
+</launch>
