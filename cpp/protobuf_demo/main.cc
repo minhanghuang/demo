@@ -12,6 +12,31 @@ int main(int argc, char* argv[]) {
   std::cout << "Hello, Protobuf!" << std::endl;
 
   {
+    std::cout << "打印" << std::endl;
+    Person person = Person();
+    person.mutable_birth_date()->set_nanos(0);
+    person.add_hobbies("football");
+
+    { std::cout << "print1 : \n" << person.DebugString() << std::endl; }
+
+    {
+      std::string formatted_output;
+      google::protobuf::TextFormat::PrintToString(person, &formatted_output);
+      std::cout << "print2 : \n" << formatted_output << std::endl;
+    }
+
+    {
+      std::string formatted_output;
+      google::protobuf::TextFormat::Printer printer;
+      printer.SetSingleLineMode(true);              // 设置为单行模式
+      printer.SetUseShortRepeatedPrimitives(true);  // 使用简短格式打印重复字段
+      printer.SetExpandAny(true);                   // 展开Any字段
+      printer.PrintToString(person, &formatted_output);
+      std::cout << "print3 : \n" << formatted_output << std::endl;
+    }
+  }
+
+  {
     std::cout << "repeated 赋值" << std::endl;
     Person person = Person();
     auto current_time = google::protobuf::util::TimeUtil::GetCurrentTime();
