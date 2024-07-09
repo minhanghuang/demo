@@ -34,6 +34,24 @@ int main(int argc, char* argv[]) {
   }
 
   {
+    std::cout << "@@@@@ 边遍历边删除 @@@@@" << std::endl;
+    std::unordered_map<std::string, int> m(data);
+    assert(data.size() == m.size());
+    for (auto it = m.begin(); it != m.end();) {
+      if (0 == it->second % 2) {
+        // 从map中移除偶数
+        it = m.erase(it);  // 一定要将it赋值为下一个对象
+        // m.erase(it);  // err
+      } else {
+        ++it;
+      }
+    }
+    for (const auto& it : m) {
+      std::cout << "m value: " << it.first << std::endl;
+    }
+  }
+
+  {
     // 删除不存在的元素: 不抛异常 & 返回0
     std::cout << "@@@@@ 删除元素 @@@@@" << std::endl;
     std::unordered_map<std::string, int> a;
