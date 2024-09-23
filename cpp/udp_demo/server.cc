@@ -1,62 +1,41 @@
-/*
-* Copyright (C) Trunk Technology, Inc. - All Rights Reserved
-*
-* Unauthorized copying of this file, via any medium is strictly prohibited
-* Proprietary and confidential
-*
-* Written by Huang Minhang <huangminhang@trunk.tech>, 2021/11/22 21:55
-*/
 #include <iostream>
+
 #include <asio.hpp>
 
+#include "frame.h"
 
 #define maxlength 1400
 
-using asio::ip::udp;
-
-struct Header {
-    int id;
-    std::string version;
-    float stamp;
-    uint8_t user;
-    int na;
-};
-
-struct Data {
-    int value;
-    float lis[19];
-};
-
-struct Frame {
-//    Header header;
-//    Data   data;
-    int q;
-};
-
-int main(int argc , char ** argv) {
-    std::cout << "Hello, UDP Server!" << std::endl;
-    asio::io_context io_context;
-
-    udp::socket sock(io_context, udp::endpoint(udp::v4(), 9005));
-
-    while (true) {
-        unsigned char recv_buf[maxlength];
-        udp::endpoint sender_endpoint;
-        while (true) {
-            size_t length = sock.receive_from(asio::buffer(recv_buf, maxlength), sender_endpoint);
-            auto* pp= (Frame *)recv_buf;
-            std::cout << "length:" << length <<std::endl;
-            std::cout << "na:" << pp->q <<std::endl;
-//            std::cout << "version:" << pp->header.version <<std::endl;
-//            std::cout << "stamp:" << pp->header.stamp <<std::endl;
-//            std::cout << "user:" << (int)pp->header.user <<std::endl;
-//            std::cout << "value:" << (int)pp->data.value <<std::endl;
-//            std::cout << "lis0:" << pp->data.lis[0] <<std::endl;
-//            std::cout << "lis1:" << pp->data.lis[1] <<std::endl;
-            std::cout << "---" <<std::endl;
-        }
+int main(int argc, char** argv) {
+  std::cout << "Hello, udp server." << std::endl;
+  int port = 9005;
+  asio::io_context io_context;
+  asio::ip::udp::socket sock(
+      io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), port));
+  std::vector<char> buffer(maxlength);
+  asio::ip::udp::endpoint sender_endpoint;
+  while (true) {
+    const size_t length =
+        sock.receive_from(asio::buffer(buffer, maxlength), sender_endpoint);
+    buffer.resize(length);
+    Frame frame;
+    frame.Deserialize(buffer);
+    std::cout << "length:" << length << std::endl;
+    std::cout << "id:" << frame.header.id << std::endl;
+    std::cout << "version:" << frame.header.version << std::endl;
+    std::cout << "stamp:" << frame.header.stamp << std::endl;
+    std::cout << "value:" << frame.data.value << std::endl;
+    std::cout << "vector size:" << frame.data.vector_size << std::endl;
+    std::cout << "vector" << std::endl;
+    for (const auto& it : frame.data.vector_value) {
+      std::cout << it << " ";
     }
-
-    return 0;
+    std::cout << "\n" << std::endl;
+    std::cout << "array" << std::endl;
+    for (const auto& it : frame.data.array_value) {
+      std::cout << it << " ";
+    }
+    std::cout << "\n---" << std::endl;
+  }
+  return 0;
 }
-

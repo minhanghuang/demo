@@ -1,65 +1,52 @@
-/*
-* Copyright (C) Trunk Technology, Inc. - All Rights Reserved
-*
-* Unauthorized copying of this file, via any medium is strictly prohibited
-* Proprietary and confidential
-*
-* Written by Huang Minhang <huangminhang@trunk.tech>, 2021/11/22 21:55
-*/
+#include <unistd.h>
+
+#include <cstring>
 #include <iostream>
 #include <vector>
-#include <unistd.h>
+
 #include <asio.hpp>
 
+#include "frame.h"
 
 #define maxlength 1024
 
-using asio::ip::udp;
-
-struct Header {
-    int id;
-    std::string version;
-    float stamp;
-    uint8_t user;
-    int na;
-};
-
-struct Data {
-    int value;
-    float lis[19];
-};
-
-struct Frame {
-//    Header header;
-//    Data   data;
-    int q;
-};
-
-
 int main() {
-    std::cout << "Hello, UDP Client!" << std::endl;
+  std::cout << "Hello, udp client!" << std::endl;
+  const std::string host = "127.0.0.1";
+  int port = 9005;
 
-    Frame frame{};
-//    frame.header.id = 100;
-//    frame.header.version = "1.2.3";
-//    frame.header.stamp = 1.3;
-//    frame.header.user = 200;
-//    frame.header.na = 0;
-//    frame.data.value = 123;
-//    frame.data.lis[0] = 1.1;
-//    frame.data.lis[1] = 1.2;
-    char* p = (char*)&frame;
+  Frame frame;
+  frame.header.id = 1;
+  std::strcpy(frame.header.version, "002");
+  frame.header.stamp = 3.14;
+  frame.data.value = 100;
+  frame.data.vector_size = 5;
+  for (int i = 0; i < frame.data.vector_size; i++) {
+    frame.data.vector_value.emplace_back(i + 10.1);
+  }
+  for (int i = 0; i < 5; i++) {
+    frame.data.array_value[i] = i;
+    std::cout << "[debug] : " << frame.data.array_value[i] << std::endl;
+  }
+  std::vector<char> buffer;
+  frame.Serialize(&buffer);
 
-    asio::io_context io_context;
-    udp::endpoint sender_endpoint(asio::ip::address::from_string("192.168.0.192"), 9005);
-    udp::socket socket(io_context);
-    socket.open(udp::v4());
+  asio::io_context io_context;
+  asio::ip::udp::endpoint sender_endpoint(asio::ip::address::from_string(host),
+                                          port);
+  asio::ip::udp::socket socket(io_context);
+  socket.open(asio::ip::udp::v4());
 
-    while (true) {
-        socket.send_to(asio::buffer(p, sizeof(frame)), sender_endpoint);
-        std::cout << "send: " << frame.q++ << std::endl;
-        sleep(1);
-    }
+  while (true) {
+    socket.send_to(asio::buffer(buffer.data(), frame.Size()), sender_endpoint);
+    std::cout << frame.header.id << std::endl;
+    std::cout << frame.header.stamp << std::endl;
+    std::cout << frame.header.version << std::endl;
+    std::cout << frame.data.value << std::endl;
+    std::cout << frame.data.vector_size << std::endl;
+    std::cout << "---" << std::endl;
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  }
 
-    return 0;
+  return 0;
 }
