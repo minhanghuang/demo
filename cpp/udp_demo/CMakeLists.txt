@@ -13,10 +13,14 @@ include_directories(
 )
 
 add_executable(server server.cc)
+add_executable(server_cb server_cb.cc)
 add_executable(client client.cc)
 add_executable(broadcast_client broadcast_client.cc)
 
 target_link_libraries(server
+  Threads::Threads
+)
+target_link_libraries(server_cb
   Threads::Threads
 )
 target_link_libraries(client
