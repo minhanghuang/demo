@@ -27,6 +27,22 @@ struct __attribute__((packed)) Frame2 {
 int main(int argc, char* argv[]) {
   std::cout << "Hello, byte" << std::endl;
   {
+    std::cout << "赋值" << std::endl;
+    Frame frame;
+    // std::vector<char> buffer; // err
+    std::vector<char> buffer(sizeof(Frame));
+    frame.a = 1;
+    frame.b = 2;
+    frame.c[0] = 10;
+    frame.c[1] = 20;
+    frame.c[2] = 30;
+    frame.c[3] = 40;
+    frame.d.x = 100;
+    frame.d.y = 200;
+    frame.d.z = 300;
+    std::memcpy(buffer.data(), &frame, sizeof(frame));
+  }
+  {
     std::cout << "序列化" << std::endl;
     Frame frame;
     frame.a = 1;
