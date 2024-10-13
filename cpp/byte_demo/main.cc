@@ -12,7 +12,7 @@ struct __attribute__((packed)) Vector3 {
   float z;
 };
 
-struct __attribute__((packed)) Frame {  // 字节对齐
+struct __attribute__((packed)) Frame {  // POD
   std::uint8_t a;                       // 1B
   std::uint8_t b;                       // 1B
   std::array<float, 4> c;               // 4 * 4=16B
@@ -29,6 +29,30 @@ template <typename T>
 void Serialize(std::vector<char>& buffer, const T& value) {
   const char* data = reinterpret_cast<const char*>(&value);
   buffer.insert(buffer.end(), data, data + sizeof(T));
+}
+
+template <typename T>
+void Deserialize(const std::vector<char>& buffer, size_t& offset, T& value) {
+  // 从 buffer 中提取 T 类型的值
+  std::memcpy(&value, buffer.data() + offset, sizeof(T));
+  offset += sizeof(T);  // 更新 offset
+}
+
+template <typename T, size_t N>
+void Deserialize(const std::vector<char>& buffer, size_t& offset,
+                 std::array<T, N>& arr) {
+  for (size_t i = 0; i < N; ++i) {
+    Deserialize(buffer, offset, arr[i]);  // 递归反序列化每个元素
+  }
+}
+
+template <typename T>
+void Deserialize(const std::vector<char>& buffer, size_t& offset,
+                 std::vector<T>& vec, std::size_t size) {
+  vec.resize(size);  // 根据传入的大小调整 vector 大小
+  for (size_t i = 0; i < size; ++i) {
+    Deserialize(buffer, offset, vec[i]);  // 递归反序列化每个元素
+  }
 }
 
 int main(int argc, char* argv[]) {
@@ -233,6 +257,43 @@ int main(int argc, char* argv[]) {
 
   {
     std::cout << "反序列化2" << std::endl;
+    Frame frame;
+    std::vector<char> buffer;
+
+    // 1. 序列化 a 和 b
+    buffer.push_back(static_cast<char>(1));  // a
+    buffer.push_back(static_cast<char>(2));  // b
+
+    // 2. 序列化 c (std::array<float, 4>)
+    for (int i = 0; i < 4; i++) {
+      float value = i + 0.5f;  // 假设值为 0.5, 1.5, 2.5, 3.5
+      const char* c_ptr = reinterpret_cast<const char*>(&value);
+      buffer.insert(buffer.end(), c_ptr, c_ptr + sizeof(float));
+    }
+
+    // 3. 序列化 d (Vector3)
+    Vector3 d = {100.0f, 200.0f,
+                 300.0f};  // 假设 d.x = 100, d.y = 200, d.z = 300
+    const char* d_ptr = reinterpret_cast<const char*>(&d);
+    buffer.insert(buffer.end(), d_ptr, d_ptr + sizeof(Vector3));
+
+    // 反序列化
+    std::size_t offset = 0;
+    Deserialize(buffer, offset, frame);
+
+    assert(1 == frame.a);
+    assert(2 == frame.b);
+    assert(0.5f == frame.c[0]);
+    assert(1.5f == frame.c[1]);
+    assert(2.5f == frame.c[2]);
+    assert(3.5f == frame.c[3]);
+    assert(100.0f == frame.d.x);
+    assert(200.0f == frame.d.y);
+    assert(300.0f == frame.d.z);
+  }
+
+  {
+    std::cout << "反序列化3" << std::endl;
     Frame2 frame;
     std::vector<char> buffer;
 
@@ -269,6 +330,52 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < frame.b_size; ++i) {
       std::memcpy(&frame.b[i], buffer.data() + offset, sizeof(Vector3));
       offset += sizeof(Vector3);
+    }
+
+    assert(0.5f == frame.a[0]);
+    assert(1.5f == frame.a[1]);
+    assert(2.5f == frame.a[2]);
+    assert(3.5f == frame.a[3]);
+    assert(5 == frame.b_size);
+    for (int i = 0; i < frame.b_size; i++) {
+      // std::cout << frame.b[i].x << std::endl;
+      // std::cout << frame.b[i].y << std::endl;
+      // std::cout << frame.b[i].z << std::endl;
+      assert(i + 1 == frame.b[i].x);
+      assert(i + 2 == frame.b[i].y);
+      assert(i + 3 == frame.b[i].z);
+    }
+  }
+
+  {
+    std::cout << "反序列化4" << std::endl;
+    Frame2 frame;
+    std::vector<char> buffer;
+
+    for (int i = 0; i < 4; i++) {
+      float value = i + 0.5f;  // 假设值为 0.5, 1.5, 2.5, 3.5
+      const char* a_ptr = reinterpret_cast<const char*>(&value);
+      buffer.insert(buffer.end(), a_ptr, a_ptr + sizeof(float));
+    }
+
+    buffer.push_back(static_cast<char>(5));  // b_size
+    buffer.push_back(0);  // 注意  这里被序列化为两个字节
+
+    for (int i = 0; i < 5; i++) {
+      Vector3 vector3;
+      vector3.x = i + 1;
+      vector3.y = i + 2;
+      vector3.z = i + 3;
+      const char* vector3_ptr = reinterpret_cast<const char*>(&vector3);
+      buffer.insert(buffer.end(), vector3_ptr, vector3_ptr + sizeof(Vector3));
+    }
+
+    std::size_t offset = 0;
+    Deserialize(buffer, offset, frame.a);
+    Deserialize(buffer, offset, frame.b_size);
+    frame.b.resize(frame.b_size);  // 设置大小
+    for (auto& ele : frame.b) {
+      Deserialize(buffer, offset, ele);
     }
 
     assert(0.5f == frame.a[0]);
