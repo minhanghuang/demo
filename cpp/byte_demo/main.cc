@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 
+// 12B
 struct __attribute__((packed)) Vector3 {
   float x;
   float y;
@@ -19,10 +20,16 @@ struct __attribute__((packed)) Frame {  // 字节对齐
 };
 
 struct __attribute__((packed)) Frame2 {
-  std::array<float, 4> a;
-  std::uint16_t b_size;
+  std::array<float, 4> a;  // 16B
+  std::uint16_t b_size;    // 2B
   std::vector<Vector3> b;
 };
+
+template <typename T>
+void Serialize(std::vector<char>& buffer, const T& value) {
+  const char* data = reinterpret_cast<const char*>(&value);
+  buffer.insert(buffer.end(), data, data + sizeof(T));
+}
 
 int main(int argc, char* argv[]) {
   std::cout << "Hello, byte" << std::endl;
@@ -115,8 +122,60 @@ int main(int argc, char* argv[]) {
                   frame.b.data(), b_data_size);
     }
 
+    assert(buffer.size() == sizeof(frame.a) + sizeof(frame.b_size) +
+                                frame.b_size * sizeof(frame.b[0]));
+
     std::size_t offset = 0;
 
+    float* a_data = reinterpret_cast<float*>(&buffer[offset]);
+    assert(10 == a_data[0]);
+    assert(20 == a_data[1]);
+    assert(30 == a_data[2]);
+    assert(40 == a_data[3]);
+    offset += sizeof(frame.a);
+
+    assert(5 == buffer[offset]);
+    offset += sizeof(frame.b_size);
+
+    for (int i = 0; i < frame.b_size; i++) {
+      float* data = reinterpret_cast<float*>(&buffer[offset]);
+      assert(i + 1 == data[0]);
+      assert(i + 2 == data[1]);
+      assert(i + 3 == data[2]);
+      offset += sizeof(Vector3);
+    }
+  }
+
+  {
+    std::cout << "序列化3" << std::endl;
+    Frame2 frame;
+    frame.a[0] = 10;
+    frame.a[1] = 20;
+    frame.a[2] = 30;
+    frame.a[3] = 40;
+    frame.b_size = 5;
+    for (int i = 0; i < frame.b_size; i++) {
+      Vector3 vector3;
+      vector3.x = i + 1;
+      vector3.y = i + 2;
+      vector3.z = i + 3;
+      frame.b.emplace_back(vector3);
+    }
+
+    std::vector<char> buffer;
+    Serialize(buffer, frame.a);
+    Serialize(buffer, frame.b_size);
+    for (const auto& item : frame.b) {
+      Serialize(buffer, item.x);
+      Serialize(buffer, item.y);
+      Serialize(buffer, item.z);
+    }
+
+    // 16B + 2B + 5 * 12B = 84B
+    assert(buffer.size() == sizeof(frame.a) + sizeof(frame.b_size) +
+                                frame.b_size * sizeof(frame.b[0]));
+
+    std::size_t offset = 0;
     float* a_data = reinterpret_cast<float*>(&buffer[offset]);
     assert(10 == a_data[0]);
     assert(20 == a_data[1]);
