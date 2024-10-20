@@ -106,5 +106,31 @@ int main(int argc, char* argv[]) {
       std::cout << "Container is empty." << std::endl;
     }
   }
+
+  {
+    std::cout << "@@@@@@@@@@@@@  查找起始符 @@@@@@@@@@@@@ " << std::endl;
+    std::vector<char> buffer = {0x01, 0x02, 0x03, 0x0a, 0x0a, 0x04, 0x05};
+
+    // 定义起始符 (0x0a0a)
+    std::vector<char> start_marker = {0x0a, 0x0a};
+
+    // 在缓冲区中查找起始符的位置
+    auto it = std::search(buffer.begin(), buffer.end(), start_marker.begin(),
+                          start_marker.end());
+
+    // 如果找到起始符，删除它之前的所有数据
+    if (it != buffer.end()) {
+      buffer.erase(buffer.begin(), it);
+    } else {
+      std::cerr << "未找到起始符" << std::endl;
+    }
+
+    // 输出剩余的 buffer 数据
+    std::cout << "Modified buffer: ";
+    for (char c : buffer) {
+      std::cout << std::hex << static_cast<int>(c) << " ";
+    }
+    std::cout << std::endl;
+  }
   return 0;
 }
