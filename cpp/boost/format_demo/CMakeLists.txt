@@ -1,18 +1,20 @@
 cmake_minimum_required(VERSION 3.5.1)
-project(boost_demo VERSION 0.0.0)
+project(boost_format VERSION 0.0.0)
 
 set(TARGET_NAME ${PROJECT_NAME})
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug)
+endif()
 
-# 必须指定组件, 否则找不到
-find_package(Boost REQUIRED COMPONENTS system thread)
+find_package(Boost REQUIRED)
 
 include_directories(
   ${Boost_INCLUDE_DIRS}
 )
 
-link_directories (
+link_directories(
   ${Boost_LIBRARY_DIRS}
 )
 
