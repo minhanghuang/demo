@@ -1,3 +1,5 @@
+#include <cassert>
+#include <fstream>
 #include <iostream>
 #include <string>
 
@@ -5,6 +7,35 @@
 
 int main() {
   std::cout << "Hello, nlohmann json!" << std::endl;
+
+  {
+    std::cout << "@@@@@ 从文件中读取 @@@@@" << std::endl;
+    const std::string filename = "json_example.json";
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+      std::cerr << "无法打开文件 json_example.json" << std::endl;
+      assert(false);
+    }
+    nlohmann::json obj;
+    file >> obj;
+    file.close();
+
+    std::cout << "json_example.json file " << obj << std::endl;
+  }
+
+  {
+    std::cout << "@@@@@ 写入文件 @@@@@" << std::endl;
+    std::string s =
+        "{ \"happy\": true, \"pi\": 3.141,  \"name\": \"\",  \"age\": 99 }";
+    nlohmann::json obj = nlohmann::json::parse(s);
+    const std::string filename = "output.json";
+    std::ofstream file(filename);
+    if (file.is_open()) {
+      file << obj.dump(4);
+    }
+    file.close();
+  }
+
   {
     std::cout << "@@@@@ 字符串转json @@@@@" << std::endl;
     std::string s =

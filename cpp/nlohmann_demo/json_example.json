@@ -1,0 +1,13 @@
+{
+  "name": "张三",
+  "age": 25,
+  "skills": [
+    "C++",
+    "Python",
+    "JSON"
+  ],
+  "experience": {
+    "years": 5,
+    "company": "Tech Corp"
+  }
+}
